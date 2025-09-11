@@ -303,11 +303,11 @@ const Dashboard = () => {
             resolvedCalls={Math.floor((complaintsData?.pagination?.total || 0) * 0.65)}
             unresolvedCalls={Math.ceil((complaintsData?.pagination?.total || 0) * 0.35)}
             totalEscalatedCalls={complaintsData?.pagination?.total || 0}
-            className="w-full min-w-0"
+            className="w-full min-w-0 rounded-[18px]"
           />
         </div>
         
-        <DashboardCard title="All Calls" className="w-full min-w-0 h-fit">
+        <DashboardCard title="All Calls" className="w-full rounded-[18px] min-w-0 h-fit">
           {claireLoading ? (
             <div className="h-[400px] flex items-center justify-center">
               <Loader2 className="h-6 w-6 animate-spin text-primary" />

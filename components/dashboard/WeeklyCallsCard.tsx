@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { Card } from '@/components/ui/card';
+import { Card, CardFooter } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import WeekFilter from '@/components/dashboard/WeekFilter';
 import { useApp } from '@/context/GlobalContext';
@@ -181,18 +181,17 @@ const WeeklyCallsCard: React.FC<WeeklyCallsCardProps> = ({ className }) => {
 
   // Prepare chart data with dynamic colors based on hover state
   const chartData = callsData?.data ? {
-    ...callsData.data,
+    labels: ['1', '2', '3', '4', '5', '6', '7'], // Replace date labels with day numbers
     datasets: callsData.data.datasets.map(dataset => ({
       ...dataset,
-      backgroundColor: dataset.data.map((_, index) => 
+      backgroundColor: dataset.data.map((_, index) =>
         hoveredBarIndex === index ? '#9653DB' : '#E7D0FF47'
       ),
-      borderColor: dataset.data.map((_, index) => 
-        hoveredBarIndex === index ? '#9653DB' : '#E7D0FF'
-      ),
-      borderWidth: 1,
-      borderRadius: 6,
+      borderWidth: 0,
+      borderRadius: { topLeft: 12, topRight: 12, bottomLeft: 0, bottomRight: 0 },
       borderSkipped: false,
+      barThickness: 24,
+      maxBarThickness: 24,
     })),
   } : null;
 
@@ -204,7 +203,7 @@ const WeeklyCallsCard: React.FC<WeeklyCallsCardProps> = ({ className }) => {
   }
 
   return (
-    <Card className={cn("p-4 sm:p-5 component-shadow card-radius bg-white dark:bg-[#FFFFFF33] border-[#00000017] dark:border-[#FFFFFF1A] w-full max-w-full overflow-hidden h-[340px]", className)}>
+    <Card className={cn("p-5 component-shadow rounded-[18px] bg-white dark:bg-[#FFFFFF33] border-[#00000017] dark:border-[#FFFFFF1A] w-full max-w-full overflow-hidden h-[340px]", className)}>
       <div className="flex items-center justify-between mb-3 sm:mb-4">
         <h3 className="text-base sm:text-lg font-semibold truncate">
           Weekly Calls : {weeklyTotal}
@@ -221,15 +220,14 @@ const WeeklyCallsCard: React.FC<WeeklyCallsCardProps> = ({ className }) => {
           <p className="text-red-500 text-center">Failed to load calls data</p>
         </div>
       ) : (
-        <div className="space-y-3 flex-1 flex flex-col">
-          
+        <div className=" flex-1 flex flex-col">
           {chartData ? (
             <div className="flex-1 flex flex-col w-full">
-              <div className="flex-1 min-h-[200px]">
+              <div className="flex-1 min-h-[220px]">
                 <Bar options={options} data={chartData} />
               </div>
               <div className="flex justify-between items-center mt-2 text-xs text-gray-500">
-                <span>X axis is Dates</span>
+                <span>X axis is Days (1-7)</span>
                 <span>Y axis is Calls</span>
               </div>
             </div>
