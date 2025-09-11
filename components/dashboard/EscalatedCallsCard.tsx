@@ -27,33 +27,27 @@ const EscalatedCallsCard: React.FC<EscalatedCallsCardProps> = ({
         Escalated Calls : {totalEscalatedCalls}
       </h3>
       
-      <div className="space-y-4 flex-1">
+      <div className="space-y-2 flex-1">
         {/* Resolved and Unresolved Labels with Icons */}
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
+          <div className="flex items-center justify-center gap-1">
               <Image 
                 src="/resolved-call.svg" 
                 alt="Resolved Call" 
-                width={20} 
-                height={20}
-                className="text-green-400"
+                width={30} 
+                height={30}
               />
-            </div>
-            <span className="text-green-400 font-medium text-sm">Resolved call</span>
+            <span className="text-[#46D5B2] font-medium text-xs">Resolved call</span>
           </div>
           
-          <div className="flex items-center gap-3">
-            <span className="text-red-400 font-medium text-sm">Unresolved</span>
-            <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center">
+          <div className="flex items-center justify-center gap-1">
+            <span className="text-[#F47676] font-medium text-xs">Unresolved</span>
               <Image 
                 src="/unresolved-call.svg" 
                 alt="Unresolved Call" 
-                width={20} 
-                height={20}
-                className="text-red-400"
+                width={30} 
+                height={30}
               />
-            </div>
           </div>
         </div>
         
@@ -63,22 +57,16 @@ const EscalatedCallsCard: React.FC<EscalatedCallsCardProps> = ({
             <div className="flex h-full">
               {/* Resolved portion (green) */}
               <div 
-                className="bg-green-500 h-full transition-all duration-500 ease-in-out"
+                className="bg-[#46D5B2] h-full transition-all duration-500 ease-in-out"
                 style={{ width: `${resolvedPercentage}%` }}
               />
               {/* Unresolved portion (red) */}
               <div 
-                className="bg-red-500 h-full transition-all duration-500 ease-in-out"
+                className="bg-[#F47676] h-full transition-all duration-500 ease-in-out"
                 style={{ width: `${unresolvedPercentage}%` }}
               />
             </div>
           </div>
-        </div>
-        
-        {/* Statistics */}
-        <div className="flex justify-between items-center text-xs text-gray-300">
-          <span>{resolvedCalls} resolved ({resolvedPercentage.toFixed(0)}%)</span>
-          <span>{unresolvedCalls} unresolved ({unresolvedPercentage.toFixed(0)}%)</span>
         </div>
       </div>
     </Card>
