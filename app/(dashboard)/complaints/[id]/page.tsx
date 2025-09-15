@@ -103,7 +103,7 @@ const ComplaintDetail = () => {
       <div className="flex-1 flex overflow-hidden">
         {/* Left Panel - Complaint Details */}
         <div className="w-1/3 border-r border-gray-200 shadow-md p-4 overflow-y-auto">
-          <Card className="p-4 bg-white">
+          <Card className="p-4 bg-white dark:bg-[#0000004D]">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <span className="font-medium">{complaint.brandName}</span>

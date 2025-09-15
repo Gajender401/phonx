@@ -159,7 +159,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     if (user?.role === 'admin') {
       return [
         { icon: 'Home', label: 'Dashboard', path: '/' },
-        { icon: 'PhoneCall', label: 'Escalated Calls', path: '/complaints' },
+        { icon: 'PhoneCall', label: 'Complaints', path: '/complains' },
         { icon: 'History', label: 'History', path: '/history' },
         { icon: 'Users', label: 'Staff', path: '/staff' },
         { icon: 'Bot', label: 'Phonx', path: '/faq' },
@@ -169,7 +169,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     // Default user menu items
     return [
       { icon: 'Home', label: 'Dashboard', path: '/' },
-      { icon: 'PhoneCall', label: 'Escalated Calls', path: '/complaints' },
+      { icon: 'PhoneCall', label: 'Escalated Calls', path: '/escalated-calls' },
       { icon: 'History', label: 'History', path: '/history' },
       { icon: 'Users', label: 'Staff', path: '/staff' },
       { icon: 'Bot', label: 'Phonx', path: '/faq' },

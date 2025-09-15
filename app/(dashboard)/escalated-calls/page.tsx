@@ -17,11 +17,11 @@ const MissedCalls = () => {
   const { currentMonth, selectedDepartment, isAuthenticated, authLoading } = useApp();
   
   // Use scroll restoration for the main container
-  const { scrollElementRef, navigateWithScrollSave } = useScrollRestoration('missed-calls-page');
+  const { scrollElementRef, navigateWithScrollSave } = useScrollRestoration('escalated-calls-page');
   
   // Use persistent state for tab and pagination
-  const [activeTab, setActiveTab, clearTabState] = useListState<'unanswered' | 'answered'>('missed-calls-tab', 'unanswered');
-  const [page, setPage, clearPageState] = useListState('missed-calls-page', 1);
+  const [activeTab, setActiveTab, clearTabState] = useListState<'unanswered' | 'answered'>('escalated-calls-tab', 'unanswered');
+  const [page, setPage, clearPageState] = useListState('escalated-calls-page', 1);
   const pageSize = 20;
 
   // Build filters for the query
@@ -81,7 +81,7 @@ const MissedCalls = () => {
   };
 
   const handleViewDetails = (id: number) => {
-    navigateWithScrollSave(`/missed-calls/${id}`);
+    navigateWithScrollSave(`/escalated-calls/${id}`);
   };
 
   if (!isAuthenticated) {
@@ -89,7 +89,7 @@ const MissedCalls = () => {
       <div className="content-area h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-xl font-semibold text-red-600">Authentication Required</h2>
-          <p className="text-gray-600 mt-2">Please log in to access missed calls.</p>
+          <p className="text-gray-600 mt-2">Please log in to access escalated calls.</p>
         </div>
       </div>
     );
@@ -105,7 +105,7 @@ const MissedCalls = () => {
     <div className="content-area h-screen flex flex-col overflow-hidden">
       <div className="flex-none">
         <Header 
-          title="Missed Calls" 
+          title="Escalated Calls" 
           showMonthFilter={true} 
           showDepartmentFilter={true} 
           filtersPosition="below"
@@ -140,14 +140,14 @@ const MissedCalls = () => {
 
         {/* Tabs */}
         <div className="mb-6">
-          <div className="border-b border-gray-200">
+          <div className="border-b border-gray-200 dark:border-gray-700">
             <nav className="flex space-x-8">
               <button
                 onClick={() => { setActiveTab('unanswered'); setPage(1); }}
                 className={`py-2 px-1 border-b-2 font-medium text-sm ${
                   activeTab === 'unanswered'
-                    ? 'border-[#0B6BAF] text-[#0B6BAF]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-black text-black dark:border-white dark:text-white'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:border-gray-600'
                 }`}
               >
                 Unanswered Calls
@@ -161,11 +161,11 @@ const MissedCalls = () => {
                 onClick={() => { setActiveTab('answered'); setPage(1); }}
                 className={`py-2 px-1 border-b-2 font-medium text-sm ${
                   activeTab === 'answered'
-                    ? 'border-[#0B6BAF] text-[#0B6BAF]'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-black text-black dark:border-white dark:text-white'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:border-gray-600'
                 }`}
               >
-                Answered Calls
+                Resolved Calls
                 {missedCallsData?.success && activeTab === 'answered' && (
                   <span className="ml-2 bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
                     {missedCallsData.data.pagination.total}
@@ -189,9 +189,9 @@ const MissedCalls = () => {
           </div>
         ) : missedCalls.length > 0 ? (
           missedCalls.map((call) => (
-            <Card 
-              key={call.id} 
-              className="p-5 component-shadow card-radius bg-white hover:shadow-lg transition-shadow cursor-pointer" 
+            <Card
+              key={call.id}
+              className="p-5 component-shadow card-radius bg-white dark:bg-[#0000004D] hover:shadow-lg transition-shadow cursor-pointer"
               onClick={() => handleViewDetails(call.id)}
             >
               <div className="flex flex-col md:flex-row gap-4 justify-between">
@@ -270,7 +270,7 @@ const MissedCalls = () => {
             </h3>
             <p className="text-muted-foreground">
               {activeTab === 'unanswered' 
-                ? 'All missed calls have been handled.' 
+                ? 'All escalated calls have been handled.' 
                 : 'No answered calls found for the selected filters.'}
             </p>
           </div>

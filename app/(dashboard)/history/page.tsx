@@ -355,88 +355,83 @@ const CallHistory = () => {
           {calls?.data?.map(call => {
             const cardId = `call-card-${call.id}`;
             return (
-              <Card 
-                key={call.id} 
+              <Card
+                key={call.id}
                 id={cardId}
-                className="p-5 component-shadow card-radius bg-white transition-all duration-300 cursor-pointer hover:bg-gray-50"
+                className="p-5 component-shadow card-radius bg-white dark:bg-[#0000004D] transition-all duration-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#00000066]"
                 onClick={(e) => handleCardClick(call.id, e)}
               >
-                <div className="flex flex-row justify-between gap-4">
-                  <div className="flex flex-col md:flex-row gap-4 justify-between">
-                    <div className="flex-1">
-                      {/* Date + handler badge + Audio player */}
-                      <div className="flex flex-row gap-3">
-                        <div className="flex items-center gap-2">
-                          <Clock size={16} className="text-gray-500" />
-                          <span className="text-sm text-gray-500">
-                            {call.time} - {call.date}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <span
-                            className={`
-                              px-2 py-1 text-xs rounded-full 
-                              ${call.handledBy === 'Claire'
-                                ? 'bg-blue-100 text-accent'
-                                : 'bg-green-100 text-green-700'
-                              }`}
-                          >
-                            {call.handledBy}
-                          </span>
-                          <div className="w-48">
-                            <AudioPlayer 
-                              src={call.audioUrl} 
-                              callId={call.id}
-                              callNumber={call.callNumber}
-                              transcript={call.transcript}
-                              cardId={cardId}
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
-                        <Phone size={16} />
-                        <span>{call.phoneNumber}</span>
-                      </div>
-
-                      {/* Transcript */}
-                      <div>
-                        <p className="text-gray-700 line-clamp-2">
-                          {call.transcript}
-                        </p>
-                      </div>
-                    </div>
+                {/* Header with Customer Number and Flag Button */}
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <span className="text-lg font-semibold text-black dark:text-white">
+                      Customer Number- {call.phoneNumber}
+                    </span>
                   </div>
+                  <div className="flex justify-end">
+                    {call.isFlagged ? (
+                      <div className="flex items-center gap-2 text-orange-600">
+                        <Flag size={16} className="fill-current" />
+                        <span className="text-sm text-black dark:text-white">
+                          Flagged ({call.complaintInfo?.complaintStatus})
+                        </span>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFlagClick(call);
+                        }}
+                        className="flex items-center gap-2 text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300 rounded-md"
+                        aria-label="Flag for Review"
+                        title="Flag for Review"
+                        disabled={flagCallMutation.isPending}
+                      >
+                        <span className="text-sm text-black dark:text-white">Flag for Review</span>
+                        <Bookmark size={20} strokeWidth={3} className="text-red-600" />
+                      </button>
+                    )}
+                  </div>
+                </div>
 
-                  <div className='flex justify-between flex-col min-w-36 items-end' >
-                    <div className="flex justify-end ">
-                      {call.isFlagged ? (
-                        <div className="flex items-center gap-2 text-orange-600">
-                          <Flag size={16} className="fill-current" />
-                          <span className="text-sm">
-                            Flagged ({call.complaintInfo?.complaintStatus})
-                          </span>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleFlagClick(call);
-                          }}
-                          className="flex items-center gap-2 text-gray-900 hover:text-gray-700 rounded-md"
-                          aria-label="Flag for Review"
-                          title="Flag for Review"
-                          disabled={flagCallMutation.isPending}
-                        >
-                          <span className="text-sm text-gray-900">Flag for Review</span>
-                          <Bookmark size={20} strokeWidth={3} className="text-red-600" />
-                        </button>
-                      )}
-                    </div>
-                    <div className="flex justify-end">
-                      <h3 className="font-medium text-gray-600">#{call.callNumber}</h3>
-                    </div>
+                {/* ID, Department, and Time Row */}
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-black dark:text-white">
+                      #{call.callNumber.replace('CALL-', '')}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-black dark:text-white">Department</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock size={14} className="text-black dark:text-white" />
+                    <span className="text-sm text-black dark:text-white">
+                      {call.time} - {call.date}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Description/Transcript */}
+                <div className="mb-4">
+                  <p className="text-black dark:text-white line-clamp-2">
+                    {call.transcript}
+                  </p>
+                </div>
+
+                {/* Duration and Audio Player Row */}
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-black dark:text-white">Duration: --:--</span>
+                  </div>
+                  <div className="w-48">
+                    <AudioPlayer
+                      src={call.audioUrl}
+                      callId={call.id}
+                      callNumber={call.callNumber}
+                      transcript={call.transcript}
+                      cardId={cardId}
+                    />
                   </div>
                 </div>
               </Card>

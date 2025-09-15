@@ -194,7 +194,7 @@ const ComplaintsPage = () => {
             {complaints.map(complaint => (
               <Card 
                 key={complaint.id}
-                className="p-5 component-shadow card-radius bg-white transition-all duration-300 cursor-pointer hover:bg-gray-50"
+                className="p-5 component-shadow card-radius bg-white dark:bg-[#0000004D] transition-all duration-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#00000066]"
                 onClick={(e) => handleCardClick(complaint.id, e)}
               >
                 <div className="flex flex-row justify-between gap-4">

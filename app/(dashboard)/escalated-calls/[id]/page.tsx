@@ -149,7 +149,7 @@ const MissedCallDetail = () => {
       <div className="content-area h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-xl font-semibold text-red-600">Authentication Required</h2>
-          <p className="text-gray-600 mt-2">Please log in to access missed call details.</p>
+          <p className="text-gray-600 mt-2">Please log in to access escalated call details.</p>
         </div>
       </div>
     );
@@ -160,7 +160,7 @@ const MissedCallDetail = () => {
       <div className="content-area h-screen flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
-          <p className="mt-2 text-gray-500">Loading missed call details...</p>
+          <p className="mt-2 text-gray-500">Loading escalated call details...</p>
         </div>
       </div>
     );
@@ -170,7 +170,7 @@ const MissedCallDetail = () => {
     return (
       <div className="content-area h-screen flex items-center justify-center">
         <div className="text-center text-red-600">
-          <p>{error instanceof Error ? error.message : 'Failed to load missed call details'}</p>
+          <p>{error instanceof Error ? error.message : 'Failed to load escalated call details'}</p>
           <button 
             onClick={() => queryClient.invalidateQueries({ queryKey: ['missedCallDetails', params.id] })}
             className="mt-4 px-4 py-2 bg-accent text-white rounded-md hover:bg-accent/90"
@@ -186,13 +186,13 @@ const MissedCallDetail = () => {
     return (
       <div className="content-area h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-600">Missed Call Not Found</h2>
-          <p className="text-gray-500 mt-2">The requested missed call could not be found.</p>
+          <h2 className="text-xl font-semibold text-gray-600">Escalated Call Not Found</h2>
+          <p className="text-gray-500 mt-2">The requested escalated call could not be found.</p>
           <button 
             onClick={navigateBack}
             className="mt-4 px-4 py-2 bg-accent text-white rounded-md hover:bg-accent/90"
           >
-            Back to Missed Calls
+            Back to Escalated Calls
           </button>
         </div>
       </div>
@@ -204,13 +204,13 @@ const MissedCallDetail = () => {
   return (
     <div className="content-area h-screen flex flex-col overflow-hidden">
       <div className="flex-none">
-        <Header title={`Missed Call #${call.id}`} showBackButton={true} onBackClick={navigateBack} />
+        <Header title={`Escalated Call #${call.id}`} showBackButton={true} onBackClick={navigateBack} />
       </div>
 
       <div className="flex-1 flex overflow-hidden">
         {/* Left Panel - Call Details */}
         <div className="w-1/3 border-r border-gray-200 shadow-md p-4 overflow-y-auto">
-          <Card className="p-4 bg-white">
+          <Card className="p-4 bg-white dark:bg-[#0000004D]">
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <Clock size={16} className="text-gray-500" />
@@ -283,13 +283,13 @@ const MissedCallDetail = () => {
         <div className="w-2/3 p-4 rounded-md shadow-md overflow-y-auto bg-gray-50">
           <div className="max-w-3xl mx-auto space-y-6">
             {/* High Level Description */}
-            <Card className="p-4 bg-white">
+            <Card className="p-4 bg-white dark:bg-[#0000004D]">
               <h3 className="text-lg font-semibold text-gray-800 mb-3">Call Summary</h3>
               <p className="text-gray-700 leading-relaxed">{call.highLevelDescription}</p>
             </Card>
 
             {/* Chat Transcript */}
-            <Card className="p-4 bg-white">
+            <Card className="p-4 bg-white dark:bg-[#0000004D]">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">Conversation Transcript</h3>
               <div className="space-y-4">
                 {call.voiceInteraction.transcript && call.voiceInteraction.transcript.messages && call.voiceInteraction.transcript.messages.length > 0 ? (
@@ -322,7 +322,7 @@ const MissedCallDetail = () => {
             </Card>
 
             {/* Brand and Department Info */}
-            <Card className="p-4 bg-white">
+            <Card className="p-4 bg-white dark:bg-[#0000004D]">
               <h3 className="text-lg font-semibold text-gray-800 mb-3">Additional Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
@@ -357,7 +357,7 @@ const MissedCallDetail = () => {
       <Dialog open={flagModalOpen} onOpenChange={setFlagModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Flag Missed Call for Review</DialogTitle>
+            <DialogTitle>Flag Escalated Call for Review</DialogTitle>
           </DialogHeader>
           <div className="py-4">
             <Textarea
