@@ -414,6 +414,9 @@ const CallHistory = () => {
 
                 {/* Description/Transcript */}
                 <div className="mb-4">
+                  <h4 className="text-sm font-semibold text-black dark:text-white mb-2">
+                    Call Description
+                  </h4>
                   <p className="text-black dark:text-white line-clamp-2">
                     {call.transcript}
                   </p>

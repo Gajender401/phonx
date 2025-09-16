@@ -191,7 +191,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
   return (
     <div className="flex flex-col gap-1">
-      <div className="flex items-center gap-1 bg-[#DCE1E8] rounded-2xl px-2 py-1.5">
+      <div className="flex items-center gap-1 bg-transparent rounded-2xl px-2 py-1.5">
         <button
           onClick={handlePlayPause}
           className="text-blue-600 hover:text-blue-700 transition-colors disabled:opacity-50 p-1"
