@@ -97,7 +97,7 @@ export const Sidebar = () => {
                             href={item.path}
                             className={cn(
                               "flex items-center justify-center p-3 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent transition-colors duration-200",
-                              isActive(item.path) && "bg-sidebar-primary text-sidebar-primary-foreground dark:bg-brand-purple-activeBg dark:border-2 dark:border-brand-purple-border"
+                              isActive(item.path) && "bg-sidebar-primary text-sidebar-primary-foreground dark:bg-[#9653DB] dark:border-2 dark:border-brand-purple-border"
                             )}
                           >
                             <item.IconComponent className="h-5 w-5" />
@@ -109,8 +109,8 @@ export const Sidebar = () => {
                       <Link
                         href={item.path}
                         className={cn(
-                          "flex items-center gap-3 px-4 py-3 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent transition-colors duration-200",
-                          isActive(item.path) && "bg-sidebar-primary text-sidebar-primary-foreground dark:bg-brand-purple-activeBg dark:border-2 dark:border-brand-purple-border"
+                          "flex items-center gap-3 px-4 py-2 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent transition-colors duration-200",
+                          isActive(item.path) && "bg-sidebar-primary text-sidebar-primary-foreground dark:bg-[#9653DB] dark:border-2 dark:border-brand-purple-border"
                         )}
                       >
                         <item.IconComponent className="h-5 w-5" />

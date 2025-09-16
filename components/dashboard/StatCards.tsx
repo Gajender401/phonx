@@ -31,12 +31,12 @@ const StatCards: React.FC<StatCardsProps> = ({ stats, escalatedCalls = 0, solved
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-9">
       {cardData.map((card, index) => {
         return (
           <div
             key={index}
-            className="bg-white dark:bg-[#FFFFFF33] border border-[#E4E7EC] dark:border-[#FFFFFF1A] px-6 py-3 rounded-[14px] min-w-0"
+            className="bg-white dark:bg-[#FFFFFF33] border h-[111px] border-[#E4E7EC] dark:border-[#FFFFFF1A] px-6 py-3 rounded-[14px] min-w-0"
           >
             <div className="flex items-center justify-between">
               <Image
@@ -46,7 +46,7 @@ const StatCards: React.FC<StatCardsProps> = ({ stats, escalatedCalls = 0, solved
                 height={100}
                 className=" flex-shrink-0"
               />
-              <div className="min-w-0 flex-1 ml-8">
+              <div className="min-w-0 flex-1 ml-6">
                 <h3 className="text-muted-foreground text-xs sm:text-sm font-medium">{card.title}</h3>
                 <p className="mt-2 text-2xl sm:text-3xl font-semibold text-foreground dark:text-white">{card.value.toLocaleString()}</p>
               </div>

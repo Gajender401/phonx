@@ -203,7 +203,7 @@ const WeeklyCallsCard: React.FC<WeeklyCallsCardProps> = ({ className }) => {
   }
 
   return (
-    <Card className={cn("p-5 component-shadow rounded-[18px] bg-white dark:bg-[#FFFFFF33] border-[#00000017] dark:border-[#FFFFFF1A] w-full max-w-full overflow-hidden h-[340px]", className)}>
+    <Card className={cn("p-5 component-shadow rounded-[18px] bg-white dark:bg-[#FFFFFF33] border-[#00000017] dark:border-[#FFFFFF1A] w-full max-w-full overflow-hidden h-[328px]", className)}>
       <div className="flex items-center justify-between mb-3 sm:mb-4">
         <h3 className="text-base sm:text-lg font-semibold truncate">
           Weekly Calls : {weeklyTotal}

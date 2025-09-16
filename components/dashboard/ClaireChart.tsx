@@ -114,7 +114,7 @@ const ClaireChart: React.FC<ClaireChartProps> = ({
               <button
                 key={dept}
                 onClick={() => setSelectedDepartment(dept)}
-                className={`px-4 rounded-lg transition-colors ${
+                className={`px-4 rounded-lg border-[#E4CAFF3D] border transition-colors ${
                   selectedDepartment === dept
                     ? 'text-white'
                     : 'text-gray-300 hover:opacity-80'

@@ -224,8 +224,8 @@ const Dashboard = () => {
           </div>
         )}
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mt-6">
-          <div className="space-y-4 md:space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 mt-6">
+          <div className="space-y-4 md:space-y-8">
             <WeeklyCallsCard className="w-full min-w-0" />
             <EscalatedCallsCard
               resolvedCalls={Math.floor((complaintsData?.pagination?.total || 0) * 0.65)}
@@ -270,7 +270,7 @@ const Dashboard = () => {
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-textColor">
+                <h1 className="text-2xl font-bold text-textColor">
                   Welcome Back,{' '}
                   <span className="">
                     {(
@@ -280,7 +280,7 @@ const Dashboard = () => {
                     ) || user?.name || 'User'}
                   </span>
                 </h1>
-                <p className="text-muted-foreground mt-1 text-sm md:text-base">
+                <p className="text-white mt-1 text-sm md:text-base">
                 Here overview of your calls 
                 </p>
               </div>
@@ -296,8 +296,8 @@ const Dashboard = () => {
         solvedByClaire={clairePerformance?.data?.queriesSolved || 0}
       />
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mt-6">
-        <div className="space-y-4 md:space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-9 mt-6">
+        <div className="space-y-4 md:space-y-9">
           <WeeklyCallsCard className="w-full min-w-0" />
           <EscalatedCallsCard
             resolvedCalls={Math.floor((complaintsData?.pagination?.total || 0) * 0.65)}
