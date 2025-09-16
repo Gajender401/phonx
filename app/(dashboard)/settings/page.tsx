@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import Header from '@/components/layout/Header';
+import { GlobalHeader } from '@/components/layout/GlobalHeader';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -188,7 +188,7 @@ const Settings = () => {
   if (isLoading) {
     return (
       <div className="content-area">
-        <Header title="Settings" />
+        <GlobalHeader title="Settings" />
         <div className="flex items-center justify-center py-8">
           <Loader2 className="h-6 w-6 animate-spin" />
           <span className="ml-2">Loading account details...</span>
@@ -199,7 +199,7 @@ const Settings = () => {
 
   return (
     <div className="content-area">
-      <Header title="Settings" />
+      <GlobalHeader title="Settings" />
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="p-5 component-shadow card-radius bg-white md:col-span-2">

@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import Header from '@/components/layout/Header';
+import { GlobalHeader } from '@/components/layout/GlobalHeader';
 import { Card } from '@/components/ui/card';
 import { Phone, Flag, Clock, ChevronLeft, ChevronRight, Bookmark, X } from 'lucide-react';
 import AudioPlayer from '@/components/AudioPlayer';
@@ -11,6 +11,7 @@ import { apiClient } from '@/lib/api';
 import { AxiosError } from 'axios';
 import { useApp } from '@/context/GlobalContext';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import { useScrollRestoration, useListState } from '@/hooks/use-scroll-restoration';
 import Image from 'next/image';
@@ -150,7 +151,7 @@ const FlagPopup = ({ isOpen, onClose, onSubmit }: {
 const CallHistory = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { currentMonth, selectedDepartment, isAuthenticated, authLoading } = useApp();
+  const { currentMonth, selectedDepartment, isAuthenticated, authLoading, departments, setCurrentMonth, setSelectedDepartment } = useApp();
   const [flagModalOpen, setFlagModalOpen] = useState(false);
   const [selectedCall, setSelectedCall] = useState<Call | null>(null);
   const [flagDescription, setFlagDescription] = useState('');
@@ -306,19 +307,64 @@ const CallHistory = () => {
   return (
     <div className="content-area h-screen flex flex-col overflow-hidden">
       <div className="flex-none">
-        <Header 
-          title="Call History" 
-          showMonthFilter={true} 
-          showDepartmentFilter={true}
-          filtersPosition="below"
-          onMonthChange={() => setPage(1)}
-          onDepartmentChange={() => setPage(1)}
-          rightContent={
+        <GlobalHeader title="History" />
+
+        {/* Filters and Pagination Controls */}
+        <div className="px-4 md:px-6 lg:px-8 mb-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="flex flex-wrap gap-3">
+              <Select
+                value={currentMonth}
+                onValueChange={(value) => {
+                  setCurrentMonth(value);
+                  setPage(1);
+                }}
+              >
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Month" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="January 2025">January 2025</SelectItem>
+                  <SelectItem value="February 2025">February 2025</SelectItem>
+                  <SelectItem value="March 2025">March 2025</SelectItem>
+                  <SelectItem value="April 2025">April 2025</SelectItem>
+                  <SelectItem value="May 2025">May 2025</SelectItem>
+                  <SelectItem value="June 2025">June 2025</SelectItem>
+                  <SelectItem value="July 2025">July 2025</SelectItem>
+                  <SelectItem value="August 2025">August 2025</SelectItem>
+                  <SelectItem value="September 2025">September 2025</SelectItem>
+                  <SelectItem value="October 2025">October 2025</SelectItem>
+                  <SelectItem value="November 2025">November 2025</SelectItem>
+                  <SelectItem value="December 2025">December 2025</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={selectedDepartment || 'all'}
+                onValueChange={(value) => {
+                  setSelectedDepartment(value === 'all' ? '' : value);
+                  setPage(1);
+                }}
+              >
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="All Departments" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Departments</SelectItem>
+                  {departments?.map((department) => (
+                    <SelectItem key={department.id} value={department.id.toString()}>
+                      {department.departmentName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="flex items-center gap-2">
-              <Button 
-                variant="outline" 
-                size="icon" 
-                className="h-9 w-9" 
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1}
               >
@@ -327,10 +373,10 @@ const CallHistory = () => {
               <div className="text-sm text-gray-600">
                 Page {calls?.pagination?.page ?? page} {calls?.pagination?.totalPages ? `of ${calls.pagination.totalPages}` : ''}
               </div>
-              <Button 
-                variant="outline" 
-                size="icon" 
-                className="h-9 w-9" 
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9"
                 onClick={() => {
                   const totalPages = calls?.pagination?.totalPages || 1;
                   setPage((p) => Math.min(totalPages, p + 1));
@@ -343,8 +389,8 @@ const CallHistory = () => {
                 <ChevronRight className="h-4 w-4" />
               </Button>
             </div>
-          }
-        />
+          </div>
+        </div>
       </div>
 
       <div 

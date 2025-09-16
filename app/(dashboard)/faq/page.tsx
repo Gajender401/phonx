@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useMemo, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import PageHeader from '@/components/layout/PageHeader';
+import { GlobalHeader } from '@/components/layout/GlobalHeader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -341,10 +341,7 @@ export default function FAQPage() {
 
   return (
     <div className="content-area">
-      <PageHeader
-        title="Claire Knowledge Base"
-        subtitle="Manage your FAQ questions and answers"
-      />
+      <GlobalHeader title="Claire Knowledge Base" />
 
       <Card>
         <CardHeader>

@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react';
-import Header from '@/components/layout/Header';
+import { GlobalHeader } from '@/components/layout/GlobalHeader';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { complaintsApi, type Complaint } from '@/lib/api';
 import { useApp } from '@/context/GlobalContext';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -50,7 +51,7 @@ const getStatusColor = (status: string) => {
 const ComplaintsPage = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { isAuthenticated, authLoading, currentMonth } = useApp();
+  const { isAuthenticated, authLoading, currentMonth, brands, departments } = useApp();
   
   // Derive YYYY-MM from context month string like 'August 2025'
   const deriveMonthParam = (monthLabel: string): string => {
@@ -61,6 +62,22 @@ const ComplaintsPage = () => {
     return `${year}-${monthNumber.toString().padStart(2, '0')}`;
   };
   const initialMonthParam = deriveMonthParam(currentMonth);
+
+  const months = [
+    'January 2025',
+    'February 2025',
+    'March 2025',
+    'April 2025',
+    'May 2025',
+    'June 2025',
+    'July 2025',
+    'August 2025',
+    'September 2025',
+    'October 2025',
+    'November 2025',
+    'December 2025'
+  ];
+
   const [filters, setFilters] = useState({
     month: initialMonthParam,
     departmentId: '',
@@ -164,15 +181,58 @@ const ComplaintsPage = () => {
   return (
     <div className="content-area h-screen flex flex-col overflow-hidden">
       <div className="flex-none">
-        <Header 
-          title="Complaints" 
-          showMonthFilter={true} 
-          showDepartmentFilter={true}
-          showBrandFilterIntegrated={true}
-          onMonthChange={(month) => handleFilterChange('month', month)}
-          onDepartmentChange={(dept) => handleFilterChange('departmentId', dept)}
-          onBrandChange={(brand) => handleFilterChange('brandName', brand)}
-        />
+        <GlobalHeader title="Complaints" />
+        <div className="flex flex-wrap gap-3 px-4 md:px-6 lg:px-8 mb-6">
+          <Select
+            value={filters.month}
+            onValueChange={(value) => handleFilterChange('month', value)}
+          >
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="Month" />
+            </SelectTrigger>
+            <SelectContent>
+              {months.map((month) => (
+                <SelectItem key={month} value={month}>
+                  {month}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={filters.departmentId}
+            onValueChange={(value) => handleFilterChange('departmentId', value)}
+          >
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="All Departments" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Departments</SelectItem>
+              {departments?.map((department) => (
+                <SelectItem key={department.id} value={department.id.toString()}>
+                  {department.departmentName}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={filters.brandName || 'all'}
+            onValueChange={(value) => handleFilterChange('brandName', value)}
+          >
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="All Brands" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Brands</SelectItem>
+              {brands.map((brand) => (
+                <SelectItem key={brand.id} value={brand.brandName}>
+                  {brand.brandName}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 pb-4">

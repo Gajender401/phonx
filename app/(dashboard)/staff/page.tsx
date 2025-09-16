@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import Header from '@/components/layout/Header';
+import { GlobalHeader } from '@/components/layout/GlobalHeader';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -317,9 +317,9 @@ const Staff = () => {
 
   return (
     <div className="content-area">
+      <GlobalHeader title="Staff" />
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
         <div className="flex flex-col gap-4 w-full">
-          <Header title="Staff" />
           <div className="flex items-center justify-between w-full">
             <div className='flex items-center gap-2'>
               <Filter size={16} className="text-gray-500" />
