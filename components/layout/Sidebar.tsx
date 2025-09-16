@@ -123,6 +123,35 @@ export const Sidebar = () => {
             </TooltipProvider>
           </nav>
 
+          {/* Logout Button */}
+          <div className="px-4 pb-4">
+            {isSidebarCollapsed ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleLogout}
+                    className="w-full justify-center p-3 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent transition-colors duration-200"
+                  >
+                    <LogOut className="h-5 w-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">Logout</TooltipContent>
+              </Tooltip>
+            ) : (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                className="w-full flex items-center gap-3 px-4 py-2 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent transition-colors duration-200"
+              >
+                <LogOut className="h-5 w-5" />
+                <span className="font-medium">Logout</span>
+              </Button>
+            )}
+          </div>
+
         </div>
       </div>
     </>

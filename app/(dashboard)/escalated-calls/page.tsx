@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { missedCallsApi } from '@/lib/api';
 import { toast } from '@/components/ui/use-toast';
 import { useApp } from '@/context/GlobalContext';
+import { useTheme } from '@/context/ThemeContext';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useScrollRestoration, useListState } from '@/hooks/use-scroll-restoration';
@@ -16,6 +17,7 @@ import { useScrollRestoration, useListState } from '@/hooks/use-scroll-restorati
 const MissedCalls = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { resolvedTheme } = useTheme();
   const { currentMonth, selectedDepartment, isAuthenticated, authLoading, departments, setCurrentMonth, setSelectedDepartment } = useApp();
 
   // Use scroll restoration for the main container
@@ -26,6 +28,7 @@ const MissedCalls = () => {
   const [page, setPage, clearPageState] = useListState('escalated-calls-page', 1);
   const pageSize = 20;
   const [searchQuery, setSearchQuery] = useState('');
+  const [expandedDescriptions, setExpandedDescriptions] = useState<Set<number>>(new Set());
 
   // Build filters for the query
   const getFilters = () => {
@@ -88,6 +91,19 @@ const MissedCalls = () => {
     navigateWithScrollSave(`/escalated-calls/${id}`);
   };
 
+  const toggleDescription = (callId: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setExpandedDescriptions(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(callId)) {
+        newSet.delete(callId);
+      } else {
+        newSet.add(callId);
+      }
+      return newSet;
+    });
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="content-area h-screen flex items-center justify-center">
@@ -125,7 +141,7 @@ const MissedCalls = () => {
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                   <Input
                     type="text"
-                    placeholder="Search calls..."
+                    placeholder="Search by Phone no."
                     value={searchQuery}
                     onChange={(e) => {
                       setSearchQuery(e.target.value);
@@ -204,7 +220,7 @@ const MissedCalls = () => {
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-[#9D9494] dark:hover:text-gray-200 dark:hover:border-gray-600'
                     }`}
                 >
-                  Unanswered Calls
+                  Unresolved Calls
                 </button>
               </nav>
             </div>
@@ -273,7 +289,55 @@ const MissedCalls = () => {
 
                       <div className="border border-[#FFFFFF1A] p-3 rounded-[10px]">
                         <h3 className="font-extrabold text-[#696A6F] dark:text-white text-lg mb-2">Call Description</h3>
-                        <p className="text-[#696A6F] dark:text-white font-sans text-sm">{call.inquiry}</p>
+                        <div className="text-[#696A6F] dark:text-white font-sans text-sm">
+                          {(() => {
+                            const words = call.inquiry.split(' ');
+                            const firstLineWords = 3; // First line shows 3 words
+                            const secondLineWords = 3; // Second line shows 3 words before "Show more"
+                            const isExpanded = expandedDescriptions.has(call.id);
+
+                            if (words.length <= firstLineWords + secondLineWords || isExpanded) {
+                              // If total words are less than or equal to 6, or if expanded, show all
+                              return (
+                                <div>
+                                  <p className="mb-1">{call.inquiry}</p>
+                                  {words.length > firstLineWords + secondLineWords && (
+                                    <span
+                                      className="font-medium cursor-pointer hover:opacity-80 transition-opacity underline"
+                                      style={{
+                                        color: resolvedTheme === 'dark' ? 'white' : '#D5ADFF'
+                                      }}
+                                      onClick={(e) => toggleDescription(call.id, e)}
+                                    >
+                                      {isExpanded ? 'Show less' : 'Show more'}
+                                    </span>
+                                  )}
+                                </div>
+                              );
+                            }
+
+                            const firstLine = words.slice(0, firstLineWords).join(' ');
+                            const secondLine = words.slice(firstLineWords, firstLineWords + secondLineWords).join(' ');
+
+                            return (
+                              <div>
+                                <p className="mb-1">{firstLine}</p>
+                                <p className="mb-1">
+                                  {secondLine}{' '}
+                                  <span
+                                    className="font-medium cursor-pointer hover:opacity-80 transition-opacity underline"
+                                    style={{
+                                      color: resolvedTheme === 'dark' ? 'white' : '#D5ADFF'
+                                    }}
+                                    onClick={(e) => toggleDescription(call.id, e)}
+                                  >
+                                    Show more
+                                  </span>
+                                </p>
+                              </div>
+                            );
+                          })()}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -282,7 +346,7 @@ const MissedCalls = () => {
             ) : (
               <div className="text-center py-10">
                 <h3 className="text-xl font-medium mb-2">
-                  {activeTab === 'unanswered' ? 'No Unanswered Calls' : 'No Answered Calls'}
+                  {activeTab === 'unanswered' ? 'No Unresolved Calls' : 'No Answered Calls'}
                 </h3>
                 <p className="text-muted-foreground">
                   {activeTab === 'unanswered'
@@ -295,27 +359,135 @@ const MissedCalls = () => {
 
           {/* Pagination at the bottom */}
           {missedCalls.length > 0 && (
-            <div className="flex items-center justify-center gap-2 mt-6 mb-4">
+            <div className="flex items-center justify-center gap-1 mt-6 mb-4">
+              {/* Previous Button */}
               <Button
-                variant="outline"
+                variant="ghost"
                 size="icon"
-                className="h-9 w-9"
+                className={`h-9 w-9 rounded-full ${resolvedTheme === 'dark'
+                    ? 'bg-white border-0 hover:bg-white/80'
+                    : 'bg-white border border-gray-300 hover:bg-gray-50'
+                  }`}
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1}
               >
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="h-4 w-4 text-black" />
               </Button>
-              <div className="text-sm text-gray-600">
-                Page {currentPage} {totalPages ? `of ${totalPages}` : ''}
-              </div>
+
+              {/* Page Numbers */}
+              {(() => {
+                const pages = [];
+                const showPages = 5; // Number of pages to show around current page
+                const halfShow = Math.floor(showPages / 2);
+
+                let startPage = Math.max(1, currentPage - halfShow);
+                let endPage = Math.min(totalPages, currentPage + halfShow);
+
+                // Adjust if we're near the beginning or end
+                if (currentPage <= halfShow) {
+                  endPage = Math.min(totalPages, showPages);
+                }
+                if (currentPage + halfShow >= totalPages) {
+                  startPage = Math.max(1, totalPages - showPages + 1);
+                }
+
+                // First page + ellipsis
+                if (startPage > 1) {
+                  pages.push(
+                    <Button
+                      key={1}
+                      variant="ghost"
+                      size="sm"
+                      className={`h-9 w-9 rounded-[10px] text-sm ${currentPage === 1
+                          ? resolvedTheme === 'dark'
+                            ? 'bg-[#9653DB4D] text-white hover:bg-[#7236ad4d]'
+                            : 'bg-[#9653DB4D] text-white hover:bg-[#7236ad4d]'
+                          : resolvedTheme === 'dark'
+                            ? 'bg-white text-black hover:bg-white/80'
+                            : 'bg-white border border-gray-300 hover:bg-gray-50 text-black'
+                        }`}
+                      onClick={() => setPage(1)}
+                    >
+                      1
+                    </Button>
+                  );
+
+                  if (startPage > 2) {
+                    pages.push(
+                      <span key="ellipsis1" className="px-2 text-gray-500">
+                        ...
+                      </span>
+                    );
+                  }
+                }
+
+                // Main page numbers
+                for (let i = startPage; i <= endPage; i++) {
+                  pages.push(
+                    <Button
+                      key={i}
+                      variant="ghost"
+                      size="sm"
+                      className={`h-9 w-9 rounded-[10px] text-sm ${currentPage === i
+                          ? resolvedTheme === 'dark'
+                            ?'bg-[#9653DB4D] text-white hover:bg-[#7236ad4d]'
+                            :'bg-[#9653DB4D] text-white hover:bg-[#7236ad4d]'
+                          : resolvedTheme === 'dark'
+                            ? 'bg-white text-black hover:bg-white/80'
+                            : 'bg-white border border-gray-300 hover:bg-gray-50 text-black'
+                        }`}
+                      onClick={() => setPage(i)}
+                    >
+                      {i}
+                    </Button>
+                  );
+                }
+
+                // Last page + ellipsis
+                if (endPage < totalPages) {
+                  if (endPage < totalPages - 1) {
+                    pages.push(
+                      <span key="ellipsis2" className="px-2 text-gray-500">
+                        ...
+                      </span>
+                    );
+                  }
+
+                  pages.push(
+                    <Button
+                      key={totalPages}
+                      variant="ghost"
+                      size="sm"
+                      className={`h-9 w-9 rounded-[10px] text-sm ${currentPage === totalPages
+                          ? resolvedTheme === 'dark'
+                            ?'bg-[#9653DB4D] text-white hover:bg-[#7236ad4d]'
+                            :'bg-[#9653DB4D] text-white hover:bg-[#7236ad4d]'
+                          : resolvedTheme === 'dark'
+                            ? 'bg-white text-black hover:bg-white/80'
+                            : 'bg-white border border-gray-300 hover:bg-gray-50 text-black'
+                        }`}
+                      onClick={() => setPage(totalPages)}
+                    >
+                      {totalPages}
+                    </Button>
+                  );
+                }
+
+                return pages;
+              })()}
+
+              {/* Next Button */}
               <Button
-                variant="outline"
+                variant="ghost"
                 size="icon"
-                className="h-9 w-9"
+                className={`h-9 w-9 rounded-full ${resolvedTheme === 'dark'
+                    ? 'bg-white border-0 hover:bg-white/80'
+                    : 'bg-white border border-gray-300 hover:bg-gray-50'
+                  }`}
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page >= totalPages}
               >
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-4 w-4 text-black" />
               </Button>
             </div>
           )}
