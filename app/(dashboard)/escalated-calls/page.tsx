@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { GlobalHeader } from '@/components/layout/GlobalHeader';
 import { Card } from '@/components/ui/card';
-import { Phone, CheckCircle, Loader2, ChevronLeft, ChevronRight, Eye, Search } from 'lucide-react';
+import { Phone, ChevronLeft, ChevronRight, Search, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { missedCallsApi } from '@/lib/api';
@@ -64,29 +64,25 @@ const MissedCalls = () => {
     staleTime: 1000 * 60 * 2, // Consider data fresh for 2 minutes for this specific query
   });
 
-  // Mark as answered mutation
-  const markAsAnsweredMutation = useMutation({
-    mutationFn: (id: number) => missedCallsApi.markAsAnswered(id),
+  // Mutation to mark call as resolved
+  const markResolvedMutation = useMutation({
+    mutationFn: (callId: number) => missedCallsApi.markAsAnswered(callId),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['missedCalls'] });
       toast({
         title: "Success",
-        description: "Call marked as answered",
+        description: "Call marked as resolved successfully.",
       });
-      // Invalidate and refetch missed calls
-      queryClient.invalidateQueries({ queryKey: ['missedCalls'] });
     },
-    onError: () => {
+    onError: (error) => {
       toast({
         title: "Error",
-        description: "Failed to mark call as answered",
+        description: "Failed to mark call as resolved. Please try again.",
         variant: "destructive",
       });
     },
   });
 
-  const handleMarkAsAnswered = (id: number) => {
-    markAsAnsweredMutation.mutate(id);
-  };
 
   const handleViewDetails = (id: number) => {
     navigateWithScrollSave(`/escalated-calls/${id}`);
@@ -195,8 +191,8 @@ const MissedCalls = () => {
                 <button
                   onClick={() => { setActiveTab('answered'); setPage(1); }}
                   className={`py-2 px-1 border-b-2 font-semibold text-xl ${activeTab === 'answered'
-                      ? 'border-black text-black dark:border-white dark:text-white'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-[#9D9494] dark:hover:text-gray-200 dark:hover:border-gray-600'
+                    ? 'border-black text-black dark:border-white dark:text-white'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-[#9D9494] dark:hover:text-gray-200 dark:hover:border-gray-600'
                     }`}
                 >
                   Resolved Calls
@@ -204,8 +200,8 @@ const MissedCalls = () => {
                 <button
                   onClick={() => { setActiveTab('unanswered'); setPage(1); }}
                   className={`py-2 px-1 border-b-2 font-semibold text-xl ${activeTab === 'unanswered'
-                      ? 'border-black text-black dark:border-white dark:text-white'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-[#9D9494] dark:hover:text-gray-200 dark:hover:border-gray-600'
+                    ? 'border-black text-black dark:border-white dark:text-white'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-[#9D9494] dark:hover:text-gray-200 dark:hover:border-gray-600'
                     }`}
                 >
                   Unanswered Calls
@@ -229,72 +225,55 @@ const MissedCalls = () => {
               missedCalls.map((call) => (
                 <Card
                   key={call.id}
-                  className="p-5 component-shadow card-radius bg-white dark:bg-[#0000004D] hover:shadow-lg transition-shadow cursor-pointer"
+                  className="relative p-5 component-shadow card-radius bg-white dark:bg-[#0000004D] hover:shadow-lg transition-shadow cursor-pointer"
                   onClick={() => handleViewDetails(call.id)}
                 >
-                  <div className="flex flex-col md:flex-row gap-4 justify-between">
+                  {activeTab === 'unanswered' && (
+                    <Button
+                      className="absolute top-4 rounded-[10px] right-4 border-0 bg-[#8ECD90] text-white hover:bg-[#8ECD90]/80 dark:border-2 dark:border-[#46D5B275] dark:bg-[#46D5B221] dark:hover:bg-[#46D5B221]/80 dark:text-white"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        markResolvedMutation.mutate(call.id);
+                      }}
+                      disabled={markResolvedMutation.isPending}
+                    >
+                      {markResolvedMutation.isPending ? (
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      ) : null}
+                      Mark As Resolved
+                    </Button>
+                  )}
+                  <div className="flex flex-col gap-4">
+                    {/* Customer number and department on same line */}
+                    <div className="flex items-center justify-start gap-3">
+                      <span className="font-semibold text-black dark:text-white text-xl">
+                        Customer Number- {call.phoneNumber}
+                      </span>
+                      <span className="px-3 py-1 text-sm rounded-full text-black dark:text-white bg-[#9653DB1A] dark:bg-[#9653DB33]">
+                        {call.department}
+                      </span>
+                    </div>
+
+                    {/* Other information */}
                     <div className="flex-1">
-                      <div className="flex items-center gap-4 mb-3">
-                        <span
-                          className="font-semibold text-[#0B6BAF] cursor-pointer hover:underline"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleViewDetails(call.id);
-                          }}
-                        >
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="px-4 py-2 text-xs rounded-full border border-[#E1E1E1] bg-white dark:bg-[#FFFFFF0D] dark:border-0 text-[#767680] dark:text-white">
                           Call {call.id}
                         </span>
-                        <span className="text-sm text-gray-500">{call.time} - {call.date}</span>
-                        <span className="px-2 py-1 text-xs rounded-full text-white bg-[#0B6BAF]">
-                          {call.department}
+                        <span className="text-[#767680] dark:text-white">|</span>
+                        <span className="px-4 py-2 text-xs rounded-full border border-[#E1E1E1] bg-white dark:bg-[#FFFFFF0D] dark:border-0 text-[#767680] dark:text-white">
+                          {call.time} - {call.date}
                         </span>
-                        {/* Status badge */}
-                        <span className={`px-2 py-1 text-xs rounded-full text-white ${call.status === 'answered' ? 'bg-green-500' : 'bg-red-500'
-                          }`}>
-                          {call.status === 'answered' ? 'Answered' : 'Unanswered'}
+                        <span className="text-[#767680] dark:text-white">|</span>
+                        <span className="px-4 py-2 text-xs rounded-full border border-[#E1E1E1] bg-white dark:bg-[#FFFFFF0D] dark:border-0 text-[#767680] dark:text-white">
+                          Duration : 4
                         </span>
-                        {/* Action buttons */}
-                        <div className="ml-auto flex gap-2" onClick={(e) => e.stopPropagation()}>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 px-3 text-xs"
-                            onClick={() => handleViewDetails(call.id)}
-                          >
-                            <Eye size={14} className="mr-1.5" />
-                            View Details
-                          </Button>
-                          {/* Show mark as answered button only for unanswered calls */}
-                          {activeTab === 'unanswered' && (
-                            <Button
-                              className="bg-green-500 hover:bg-green-600 text-white px-3 h-8 rounded-xl text-sm"
-                              onClick={() => handleMarkAsAnswered(call.id)}
-                              disabled={markAsAnsweredMutation.isPending}
-                            >
-                              {markAsAnsweredMutation.isPending ? (
-                                <>
-                                  <Loader2 size={14} className="mr-1.5 animate-spin" />
-                                  Marking...
-                                </>
-                              ) : (
-                                <>
-                                  <CheckCircle size={14} className="mr-1.5" />
-                                  Mark as Answered
-                                </>
-                              )}
-                            </Button>
-                          )}
-                        </div>
                       </div>
 
-                      <div className="flex items-center my-3 gap-2 text-sm text-gray-500">
-                        <Phone size={16} />
-                        <span>{call.phoneNumber}</span>
-                      </div>
-
-                      <div>
-                        <h3 className="font-extrabold text-[#404040] text-lg mb-2">Short Inquiry Description</h3>
-                        <p className="text-gray-700 font-sans text-sm">{call.inquiry}</p>
+                      <div className="border border-[#FFFFFF1A] p-3 rounded-[10px]">
+                        <h3 className="font-extrabold text-[#696A6F] dark:text-white text-lg mb-2">Call Description</h3>
+                        <p className="text-[#696A6F] dark:text-white font-sans text-sm">{call.inquiry}</p>
                       </div>
                     </div>
                   </div>
