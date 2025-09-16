@@ -296,8 +296,8 @@ const Dashboard = () => {
         solvedByClaire={clairePerformance?.data?.queriesSolved || 0}
       />
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-9 mt-6">
-        <div className="space-y-4 md:space-y-9">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 md:gap-9 mt-6">
+        <div className="lg:col-span-3 space-y-4 md:space-y-9">
           <WeeklyCallsCard className="w-full min-w-0" />
           <EscalatedCallsCard
             resolvedCalls={Math.floor((complaintsData?.pagination?.total || 0) * 0.65)}
@@ -307,7 +307,7 @@ const Dashboard = () => {
           />
         </div>
         
-        <DashboardCard title="All Calls" className="w-full rounded-[18px] min-w-0 h-fit">
+        <DashboardCard title="All Calls" className="w-full lg:col-span-2 rounded-[18px] min-w-0 h-fit">
           {claireLoading ? (
             <div className="h-[400px] flex items-center justify-center">
               <Loader2 className="h-6 w-6 animate-spin text-primary" />
