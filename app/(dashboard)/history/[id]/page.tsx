@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
+import { GlobalHeader } from '@/components/layout/GlobalHeader';
 import { Card } from '@/components/ui/card';
 import { Phone, Clock, Flag, Loader2 } from 'lucide-react';
 import AudioPlayer from '@/components/AudioPlayer';
@@ -219,102 +220,143 @@ const CallDetail = () => {
   };
 
   return (
-    <div className="content-area h-screen flex flex-col overflow-hidden">
-      <div className="flex-none">
-        <Header title={`Call #${call.callNumber}`} showBackButton={true} onBackClick={navigateBack} />
-      </div>
+    <>
+      <GlobalHeader />
+      <img
+        src="/gradient.svg"
+        alt="Gradient"
+        className="absolute top-0 right-0 w-screen h-screen pointer-events-none z-0"
+      />
+      <div className="content-area px-4 md:px-6 lg:px-8 max-w-full overflow-x-hidden relative z-10">
+        <div className="flex flex-col gap-4 mb-6">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <div className="flex-1 min-w-0">
+              <Header title={`Call #${call.callNumber}`} showBackButton={true} onBackClick={navigateBack} />
+            </div>
+          </div>
+        </div>
 
-      <div className="flex-1 flex overflow-hidden">
-        {/* Left Panel - Call Details */}
-        <div className="w-1/3 border-r border-gray-200 shadow-md p-4 overflow-y-auto">
-          <Card className="p-4 bg-white">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Clock size={16} className="text-gray-500" />
-                <span className="text-sm text-gray-500">
-                  {call.time} - {call.date}
-                </span>
-              </div>
+        <div className="grid grid-cols-1 lg:grid-cols-7 gap-4">
+          {/* Left Panel - Call Details */}
+          <div className="lg:col-span-2">
+            <Card className="p-6 h-[550px] flex flex-col bg-[#FFFFFF1A] rounded-[12px]">
+                <h2 className="text-2xl font-semibold mb-12">Call Details</h2>
+              <div className="space-y-10">
 
-              <div className="flex items-center gap-2">
-                <Phone size={16} className="text-gray-500" />
-                <span className="text-sm text-gray-500">{call.phoneNumber}</span>
-              </div>
+                {/* Time */}
+                <div className="flex items-center gap-2">
+                    <img src="/icons/call-time.svg" alt="Time" className="w-16 h-16" />
+                  <div>
+                    <p className="text-2xl text-[#E1E1E1]">Time</p>
+                    <p className="font-medium">{call.time} - {call.date}</p>
+                  </div>
+                </div>
 
-              <div className="flex items-center gap-2">
-                <span className={`
-                  px-2 py-1 text-xs rounded-full 
-                  ${call.handledBy === 'Claire' ? 'bg-blue-100 text-accent' : 'bg-green-100 text-green-700'}
-                `}>
-                  {call.handledBy}
-                </span>
-              </div> 
+                {/* Phone Number */}
+                <div className="flex items-center gap-2">
+                    <img src="/icons/call-phone.svg" alt="Phone" className="w-16 h-16" />
+                  <div>
+                    <p className="text-2xl text-[#E1E1E1]">Phone No.</p>
+                    <p className="font-medium">{call.phoneNumber}</p>
+                  </div>
+                </div>
 
-              <div className="w-full">
-                <AudioPlayer 
-                  src={call.audioUrl} 
-                  callId={call.id}
-                  callNumber={call.callNumber}
-                  transcript={call.transcript}
-                  cardId={`call-detail-${call.id}`}
-                />
-              </div>
-
-              {call.isFlagged ? (
-                <div className="flex items-center gap-2 text-orange-600">
-                  <Flag size={16} className="fill-current" />
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium">Already Flagged</span>
-                    <span className="text-xs">Status: {call.complaintInfo?.complaintStatus}</span>
-                    <span className="text-xs">
-                      Flagged: {new Date(call.complaintInfo?.flaggedAt || '').toLocaleDateString()}
+                {/* Handled By */}
+                <div className="flex items-center gap-2">
+                  <div>
+                    <p className="text-2xl text-[#E1E1E1]">Handled By</p>
+                    <span className={`
+                      px-2 py-1 text-xs rounded-full
+                      ${call.handledBy === 'Claire' ? 'bg-blue-100 text-accent' : 'bg-green-100 text-green-700'}
+                    `}>
+                      {call.handledBy}
                     </span>
                   </div>
                 </div>
-              ) : (
-                <button 
-                  onClick={handleFlagClick}
-                  className="flex items-center gap-2 text-red-600 hover:text-red-700 rounded-md"
-                  disabled={flagCallMutation.isPending}
-                >
-                  <Flag size={16} />
-                  <span>Flag for Review</span>
-                </button>
-              )}
-            </div>
-          </Card>
-        </div>
 
-        {/* Right Panel - Chat Transcript */}
-        <div className="w-2/3 p-4 rounded-md shadow-md overflow-y-auto bg-gray-50">
-          <div className="max-w-3xl mx-auto space-y-4">
-              {call.chatTranscript && call.chatTranscript.messages && call.chatTranscript.messages.length > 0 ? (
-                call.chatTranscript.messages.map((message, index: number) => (
-                <div 
-                  key={index}
-                  className={`flex ${message.role === 'Human' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div 
-                    className={`
-                      max-w-[70%] rounded-lg p-3
-                      ${message.role === 'Human'
-                        ? 'bg-[#0B6BAF] text-white' 
-                        : 'bg-white border border-gray-200'
-                      }
-                    `}
-                  >
-                    <div className="text-sm">
-                        {extractTextFromContent(message.content)}
+                {call.isFlagged ? (
+                  <div className="flex items-center gap-2 text-orange-600">
+                    <Flag size={16} className="fill-current" />
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium">Already Flagged</span>
+                      <span className="text-xs">Status: {call.complaintInfo?.complaintStatus}</span>
+                      <span className="text-xs">
+                        Flagged: {new Date(call.complaintInfo?.flaggedAt || '').toLocaleDateString()}
+                      </span>
                     </div>
                   </div>
-                </div>
-              ))
-            ) : (
-              <div className="text-center text-gray-500">
-                <p>No chat transcript available for this call.</p>
+                ) : (
+                  <button
+                    onClick={handleFlagClick}
+                    className="flex items-center gap-2 text-red-600 hover:text-red-700 rounded-md"
+                    disabled={flagCallMutation.isPending}
+                  >
+                    <Flag size={16} />
+                    <span>Flag for Review</span>
+                  </button>
+                )}
               </div>
-            )}
+            </Card>
           </div>
+
+          {/* Right Panel - Chat Transcript */}
+          <div className="lg:col-span-5">
+            <Card className="h-[550px] flex flex-col bg-[#FFFFFF1A] rounded-[12px]">
+              {/* Chat Header */}
+              <div className="p-6">
+                <h2 className="text-2xl font-semibold">Call Transcript</h2>
+              </div>
+
+              {/* Chat Messages */}
+              <div className="flex-1 p-6 overflow-y-auto space-y-4">
+                {call.chatTranscript && call.chatTranscript.messages && call.chatTranscript.messages.length > 0 ? (
+                  call.chatTranscript.messages.map((message, index: number) => (
+                    <div
+                      key={index}
+                      className={`flex items-center gap-2 ${message.role === 'Human' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      {message.role !== 'Human' && (
+                        <img
+                          src="/icons/ai.svg"
+                          alt="AI"
+                          className="w-[35px] h-[35px] flex-shrink-0"
+                        />
+                      )}
+                      <div
+                        className="max-w-[70%] rounded-2xl px-4 py-2 text-sm text-white"
+                        style={{
+                          backgroundColor: message.role === 'Human' ? '#9653DB33' : '#F1F1F11A'
+                        }}
+                      >
+                        {extractTextFromContent(message.content)}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center text-muted-foreground py-8">
+                    <p>No conversation transcript available for this call.</p>
+                  </div>
+                )}
+              </div>
+
+            </Card>
+          </div>
+        </div>
+
+        {/* Audio Player Panel - Full Width at Bottom */}
+        <div className="mt-6">
+          <Card className="p-6 bg-[#FFFFFF1A] rounded-[12px]">
+              <h3 className="text-2xl font-semibold mb-4">Call Recording</h3>
+            <div className='bg-[#0000001A] rounded-[42px] px-10 pt-10 pb-5' >
+            <AudioPlayer
+              src={call.audioUrl}
+              callId={call.id}
+              callNumber={call.callNumber}
+              transcript={call.transcript}
+              cardId={`call-detail-${call.id}`}
+            />
+            </div>
+          </Card>
         </div>
       </div>
 
@@ -333,14 +375,14 @@ const CallDetail = () => {
             />
           </div>
           <DialogFooter>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => setFlagModalOpen(false)}
               disabled={flagCallMutation.isPending}
             >
               Cancel
             </Button>
-            <Button 
+            <Button
               onClick={handleFlagSubmit}
               disabled={!flagDescription.trim() || flagCallMutation.isPending}
             >
@@ -356,7 +398,7 @@ const CallDetail = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 };
 

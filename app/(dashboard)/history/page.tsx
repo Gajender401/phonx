@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Loader2 } from 'lucide-react';
 import { useScrollRestoration, useListState } from '@/hooks/use-scroll-restoration';
 import Image from 'next/image';
+import { IoEyeSharp } from "react-icons/io5";
 
 interface ApiResponse<T> {
   success: boolean;
@@ -60,10 +61,10 @@ interface CallsResponse {
 }
 
 // Custom Flag Popup Component
-const FlagPopup = ({ isOpen, onClose, onSubmit }: { 
-  isOpen: boolean; 
-  onClose: () => void; 
-  onSubmit: (message: string) => void; 
+const FlagPopup = ({ isOpen, onClose, onSubmit }: {
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (message: string) => void;
 }) => {
   const [message, setMessage] = useState('');
   const maxLength = 500;
@@ -82,9 +83,9 @@ const FlagPopup = ({ isOpen, onClose, onSubmit }: {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      
+
       {/* Modal */}
-      <div 
+      <div
         className="relative w-full max-w-4xl rounded-lg overflow-hidden"
         style={{
           background: 'linear-gradient(180deg, #111111 26%, #DCE1E8 100%)'
@@ -93,10 +94,10 @@ const FlagPopup = ({ isOpen, onClose, onSubmit }: {
         {/* Header */}
         <div className="flex items-center justify-between px-4">
           <div className="flex items-center gap-2">
-            <Image 
-              src="/logo.svg" 
-              alt="PHONXAI" 
-              width={120} 
+            <Image
+              src="/logo.svg"
+              alt="PHONXAI"
+              width={120}
               height={120}
               className="w-24 h-24"
             />
@@ -155,10 +156,10 @@ const CallHistory = () => {
   const [flagModalOpen, setFlagModalOpen] = useState(false);
   const [selectedCall, setSelectedCall] = useState<Call | null>(null);
   const [flagDescription, setFlagDescription] = useState('');
-  
+
   // Use scroll restoration for the main container
   const { scrollElementRef, navigateWithScrollSave } = useScrollRestoration('history-page');
-  
+
   // Use persistent state for pagination
   const [page, setPage, clearPageState] = useListState('history-page', 1);
   const pageSize = 20;
@@ -173,7 +174,7 @@ const CallHistory = () => {
   // Build query parameters
   const getQueryParams = () => {
     const params = new URLSearchParams();
-    
+
     // Add month filter if selected
     if (currentMonth) {
       const [monthName, year] = currentMonth.split(' ');
@@ -204,7 +205,7 @@ const CallHistory = () => {
 
   // Flag call mutation 
   const flagCallMutation = useMutation({
-    mutationFn: (data: { callId: number; description: string }) => 
+    mutationFn: (data: { callId: number; description: string }) =>
       apiClient.post<ApiResponse<any>>(`/calls/${data.callId}/flag`, {
         description: data.description
       }),
@@ -218,20 +219,20 @@ const CallHistory = () => {
       if (selectedCall) {
         queryClient.invalidateQueries({ queryKey: ['callDetails', selectedCall.id] });
       }
-      
+
       console.log('Call flagged successfully:', response.data?.message);
     },
     onError: (err: AxiosError<ApiResponse<any>>) => {
       console.error('Error flagging call:', err);
-      
+
       if (err.response?.status === 401) {
         router.push('/login');
         return;
       }
-      
+
       // Handle specific error cases
       const errorMessage = err.response?.data?.error?.message || 'Failed to flag call';
-      
+
       if (err.response?.status === 409) {
         alert('This call has already been flagged as a complaint.');
       } else if (err.response?.status === 404) {
@@ -251,7 +252,7 @@ const CallHistory = () => {
 
   const handleFlagSubmit = async (message: string) => {
     if (!selectedCall) return;
-    
+
     flagCallMutation.mutate({
       callId: selectedCall.id,
       description: message
@@ -293,7 +294,7 @@ const CallHistory = () => {
       <div className="content-area h-screen flex items-center justify-center">
         <div className="text-center text-red-600">
           <p>{error instanceof Error ? error.message : 'Failed to load calls'}</p>
-          <button 
+          <button
             onClick={() => queryClient.invalidateQueries({ queryKey: ['calls'] })}
             className="mt-4 px-4 py-2 bg-accent text-white rounded-md hover:bg-accent/90"
           >
@@ -313,7 +314,7 @@ const CallHistory = () => {
             <div className="flex-1 min-w-0">
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-textColor">
-                All Calls
+                  All Calls
                 </h1>
                 <p className="text-muted-foreground mt-1 text-sm md:text-base">
                   View all call records and transcripts
@@ -382,7 +383,7 @@ const CallHistory = () => {
                 key={call.id}
                 ref={scrollElementRef as React.RefObject<HTMLDivElement>}
                 id={cardId}
-                className="p-6 hover:shadow-lg transition-shadow border-2 bg-[#141517] border-[#8D8D8D] cursor-pointer"
+                className="p-6 hover:shadow-lg transition-shadow border-2 bg-card text-card-foreground border-[#8D8D8D] cursor-pointer"
                 onClick={(e) => handleCardClick(call.id, e)}
               >
                 {/* Header with Customer Number and Flag Button */}
@@ -392,30 +393,35 @@ const CallHistory = () => {
                       Customer Number- {call.phoneNumber}
                     </span>
                   </div>
-                  <div className="flex justify-end">
-                    {call.isFlagged ? (
-                      <div className="flex items-center gap-2 text-orange-600">
-                        <Flag size={16} className="fill-current" />
-                        <span className="text-sm">
-                          Flagged ({call.complaintInfo?.complaintStatus})
-                        </span>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleFlagClick(call);
-                        }}
-                        className="flex items-center gap-2 hover:text-muted-foreground rounded-md transition-colors"
-                        aria-label="Flag for Review"
-                        title="Flag for Review"
-                        disabled={flagCallMutation.isPending}
-                      >
-                        <span className="text-sm">Flag for Review</span>
-                        <Bookmark size={20} strokeWidth={3} className="text-red-600" />
-                      </button>
-                    )}
+                  <div className="flex items-center gap-2">
+                    <div className="flex border border-[#FFFFFF29] px-2 py-1 rounded-md justify-end">
+                      {call.isFlagged ? (
+                        <div className="flex rounded-md items-center gap-2">
+                          <Flag size={16} className="fill-current" />
+                          <span className="text-sm">
+                            Flagged 
+                          </span>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleFlagClick(call);
+                          }}
+                          className="flex items-center gap-2 hover:text-muted-foreground rounded-md transition-colors"
+                          aria-label="Flag for Review"
+                          title="Flag for Review"
+                          disabled={flagCallMutation.isPending}
+                        >
+                          <span className="text-sm">Flag for Review</span>
+                          <Bookmark size={20} strokeWidth={3} className="text-red-600" />
+                        </button>
+                      )}
+                    </div>
+                    {call.isFlagged && <IoEyeSharp />}
                   </div>
+
+
                 </div>
 
                 {/* Call Information */}
@@ -426,8 +432,8 @@ const CallHistory = () => {
                     </span>
                   </div>
                   <span className="px-3 py-1 text-sm rounded-full text-black dark:text-white bg-[#9653DB1A] dark:bg-[#9653DB33]">
-                      {call.handledBy}
-                    </span>
+                    {call.handledBy}
+                  </span>
                   <div className="flex items-center bg-[#FFFFFF0D] px-3 py-0.5 rounded-full gap-2">
                     <Calendar size={14} />
                     <span className="text-sm text-muted-foreground">
@@ -511,8 +517,8 @@ const CallHistory = () => {
                   variant="ghost"
                   size="sm"
                   className={`h-9 w-9 rounded-[10px] text-sm ${currentPage === 1
-                      ? 'bg-[#9653DB4D] text-white hover:bg-[#7236ad4d]'
-                      : 'bg-white border border-gray-300 hover:bg-gray-50 text-black'
+                    ? 'bg-[#9653DB4D] text-white hover:bg-[#7236ad4d]'
+                    : 'bg-white border border-gray-300 hover:bg-gray-50 text-black'
                     }`}
                   onClick={() => setPage(1)}
                 >
@@ -537,8 +543,8 @@ const CallHistory = () => {
                   variant="ghost"
                   size="sm"
                   className={`h-9 w-9 rounded-[10px] text-sm ${currentPage === i
-                      ? 'bg-[#9653DB4D] text-white hover:bg-[#7236ad4d]'
-                      : 'bg-white border border-gray-300 hover:bg-gray-50 text-black'
+                    ? 'bg-[#9653DB4D] text-white hover:bg-[#7236ad4d]'
+                    : 'bg-white border border-gray-300 hover:bg-gray-50 text-black'
                     }`}
                   onClick={() => setPage(i)}
                 >
@@ -563,8 +569,8 @@ const CallHistory = () => {
                   variant="ghost"
                   size="sm"
                   className={`h-9 w-9 rounded-[10px] text-sm ${currentPage === totalPages
-                      ? 'bg-[#9653DB4D] text-white hover:bg-[#7236ad4d]'
-                      : 'bg-white border border-gray-300 hover:bg-gray-50 text-black'
+                    ? 'bg-[#9653DB4D] text-white hover:bg-[#7236ad4d]'
+                    : 'bg-white border border-gray-300 hover:bg-gray-50 text-black'
                     }`}
                   onClick={() => setPage(totalPages)}
                 >
