@@ -56,13 +56,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
 
     const wavesurfer = WaveSurfer.create({
       container: waveformRef.current,
-      waveColor: '#444',
-      progressColor: '#0B6BAF',
-      cursorColor: '#0B6BAF',
+      waveColor: '#666',
+      progressColor: '#fff',
+      cursorColor: '#fff',
       cursorWidth: 2,
-      barWidth: 2,
+      barWidth: 3,
       barGap: 1,
-      height: 25,
+      height: 64,
       normalize: true,
       backend: 'WebAudio',
       interact: true, // Allow clicking on waveform to seek
@@ -189,30 +189,81 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     }
   };
 
+  // Enhanced seek function for skip buttons
+  const seekRelative = (seconds: number) => {
+    if (!wavesurferRef.current) return;
+    const currentTime = wavesurferRef.current.getCurrentTime();
+    const newTime = Math.max(0, Math.min(duration, currentTime + seconds));
+    wavesurferRef.current.seekTo(newTime / duration);
+  };
+
   return (
-    <div className="flex flex-col gap-1">
-      <div className="flex items-center gap-1 bg-transparent rounded-2xl px-2 py-1.5">
+    <div className="flex flex-col gap-4">
+      {/* Waveform */}
+      <div className="w-full">
+        <div ref={waveformRef} className="w-full h-16" />
+      </div>
+
+      {/* Progress Bar and Time */}
+      <div className="flex items-center gap-4">
+        <span className="text-sm text-gray-400 min-w-[40px]">{formatTime(currentTime)}</span>
+        <div className="flex-1 h-1 bg-gray-600 rounded-full relative">
+          <div 
+            className="h-1 bg-white rounded-full" 
+            style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
+          />
+        </div>
+        <span className="text-sm text-gray-400 min-w-[40px]">-{formatTime(duration - currentTime)}</span>
+      </div>
+
+      {/* Controls */}
+      <div className="flex items-center justify-center gap-6">
+        {/* Rewind 15s */}
+        <button
+          onClick={() => seekRelative(-15)}
+          className="w-12 h-12 rounded-full border-2 border-gray-400 hover:border-white flex items-center justify-center text-gray-400 hover:text-white transition-colors disabled:opacity-50"
+          disabled={!wavesurferRef.current || isLoading || !!error}
+        >
+          <div className="relative flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="rotate-180">
+              <path d="M8 5v14l11-7z" fill="currentColor"/>
+            </svg>
+            <span className="absolute -bottom-2 text-xs font-bold">15</span>
+          </div>
+        </button>
+
+        {/* Play/Pause */}
         <button
           onClick={handlePlayPause}
-          className="text-blue-600 hover:text-blue-700 transition-colors disabled:opacity-50 p-1"
+          className="w-16 h-16 rounded-full bg-white hover:bg-gray-100 flex items-center justify-center text-black transition-colors disabled:opacity-50"
           disabled={!wavesurferRef.current || isLoading || !!error}
         >
           {isLoading ? (
-            <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin" />
           ) : locallyPlaying ? (
-            <Pause size={16} />
+            <Pause size={24} />
           ) : (
-            <Play size={16} />
+            <Play size={24} className="ml-1" />
           )}
         </button>
-        <div ref={waveformRef} className="flex-1" />
-        {/* Time display */}
-        <div className="text-xs text-gray-600 min-w-[70px] text-right ml-1">
-          {formatTime(currentTime)} / {formatTime(duration)}
-        </div>
+
+        {/* Forward 15s */}
+        <button
+          onClick={() => seekRelative(15)}
+          className="w-12 h-12 rounded-full border-2 border-gray-400 hover:border-white flex items-center justify-center text-gray-400 hover:text-white transition-colors disabled:opacity-50"
+          disabled={!wavesurferRef.current || isLoading || !!error}
+        >
+          <div className="relative flex items-center justify-center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M8 5v14l11-7z" fill="currentColor"/>
+            </svg>
+            <span className="absolute -bottom-2 text-xs font-bold">15</span>
+          </div>
+        </button>
       </div>
+
       {error && (
-        <p className="text-red-500 text-xs">{error}</p>
+        <p className="text-red-500 text-xs text-center">{error}</p>
       )}
     </div>
   );

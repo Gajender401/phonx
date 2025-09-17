@@ -305,14 +305,24 @@ const CallHistory = () => {
   }
 
   return (
-    <div className="content-area h-screen flex flex-col overflow-hidden">
-      <div className="flex-none">
-        <GlobalHeader title="History" />
+    <>
+      <GlobalHeader />
+      <div className="content-area px-4 md:px-6 lg:px-8 max-w-full overflow-x-hidden">
+        <div className="flex flex-col gap-4 mb-6">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <div className="flex-1 min-w-0">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-textColor">
+                  Call History
+                </h1>
+                <p className="text-muted-foreground mt-1 text-sm md:text-base">
+                  View all call records and transcripts
+                </p>
+              </div>
+            </div>
 
-        {/* Filters and Pagination Controls */}
-        <div className="px-4 md:px-6 lg:px-8 mb-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div className="flex flex-wrap gap-3">
+            {/* Filters and Pagination */}
+            <div className="flex flex-wrap gap-3 items-center">
               <Select
                 value={currentMonth}
                 onValueChange={(value) => {
@@ -358,59 +368,56 @@ const CallHistory = () => {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
 
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page <= 1}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-              <div className="text-sm text-gray-600">
-                Page {calls?.pagination?.page ?? page} {calls?.pagination?.totalPages ? `of ${calls.pagination.totalPages}` : ''}
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-9 w-9"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page <= 1}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <span className="text-sm text-muted-foreground min-w-[100px] text-center">
+                  Page {calls?.pagination?.page ?? page} {calls?.pagination?.totalPages ? `of ${calls.pagination.totalPages}` : ''}
+                </span>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-9 w-9"
+                  onClick={() => {
+                    const totalPages = calls?.pagination?.totalPages || 1;
+                    setPage((p) => Math.min(totalPages, p + 1));
+                  }}
+                  disabled={(() => {
+                    const totalPages = calls?.pagination?.totalPages;
+                    return totalPages ? page >= totalPages : false;
+                  })()}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
               </div>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9"
-                onClick={() => {
-                  const totalPages = calls?.pagination?.totalPages || 1;
-                  setPage((p) => Math.min(totalPages, p + 1));
-                }}
-                disabled={(() => {
-                  const totalPages = calls?.pagination?.totalPages;
-                  return totalPages ? page >= totalPages : false;
-                })()}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
             </div>
           </div>
         </div>
-      </div>
 
-      <div 
-        ref={scrollElementRef as React.RefObject<HTMLDivElement>}
-        className="flex-1 overflow-y-auto px-4 pb-4"
-      >
-        <div className="grid grid-cols-1 gap-5">
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 gap-6">
           {calls?.data?.map(call => {
             const cardId = `call-card-${call.id}`;
             return (
               <Card
                 key={call.id}
+                ref={scrollElementRef as React.RefObject<HTMLDivElement>}
                 id={cardId}
-                className="p-5 component-shadow card-radius bg-white dark:bg-[#0000004D] transition-all duration-300 cursor-pointer hover:bg-gray-50 dark:hover:bg-[#00000066]"
+                className="p-6 hover:shadow-lg transition-shadow cursor-pointer"
                 onClick={(e) => handleCardClick(call.id, e)}
               >
                 {/* Header with Customer Number and Flag Button */}
-                <div className="flex justify-between items-start mb-3">
+                <div className="flex justify-between items-start mb-4">
                   <div>
-                    <span className="text-lg font-semibold text-black dark:text-white">
+                    <span className="text-lg font-semibold">
                       Customer Number- {call.phoneNumber}
                     </span>
                   </div>
@@ -418,7 +425,7 @@ const CallHistory = () => {
                     {call.isFlagged ? (
                       <div className="flex items-center gap-2 text-orange-600">
                         <Flag size={16} className="fill-current" />
-                        <span className="text-sm text-black dark:text-white">
+                        <span className="text-sm">
                           Flagged ({call.complaintInfo?.complaintStatus})
                         </span>
                       </div>
@@ -428,31 +435,28 @@ const CallHistory = () => {
                           e.stopPropagation();
                           handleFlagClick(call);
                         }}
-                        className="flex items-center gap-2 text-black dark:text-white hover:text-gray-700 dark:hover:text-gray-300 rounded-md"
+                        className="flex items-center gap-2 hover:text-muted-foreground rounded-md transition-colors"
                         aria-label="Flag for Review"
                         title="Flag for Review"
                         disabled={flagCallMutation.isPending}
                       >
-                        <span className="text-sm text-black dark:text-white">Flag for Review</span>
+                        <span className="text-sm">Flag for Review</span>
                         <Bookmark size={20} strokeWidth={3} className="text-red-600" />
                       </button>
                     )}
                   </div>
                 </div>
 
-                {/* ID, Department, and Time Row */}
-                <div className="flex items-center gap-4 mb-4">
+                {/* Call Information */}
+                <div className="flex items-center gap-4 mb-4 flex-wrap">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-black dark:text-white">
+                    <span className="text-sm font-medium">
                       #{call.callNumber.replace('CALL-', '')}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-black dark:text-white">Department</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock size={14} className="text-black dark:text-white" />
-                    <span className="text-sm text-black dark:text-white">
+                    <Clock size={14} />
+                    <span className="text-sm text-muted-foreground">
                       {call.time} - {call.date}
                     </span>
                   </div>
@@ -460,10 +464,10 @@ const CallHistory = () => {
 
                 {/* Description/Transcript */}
                 <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-black dark:text-white mb-2">
+                  <h4 className="text-sm font-semibold mb-2">
                     Call Description
                   </h4>
-                  <p className="text-black dark:text-white line-clamp-2">
+                  <p className="text-muted-foreground line-clamp-2">
                     {call.transcript}
                   </p>
                 </div>
@@ -471,7 +475,7 @@ const CallHistory = () => {
                 {/* Duration and Audio Player Row */}
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-black dark:text-white">Duration: --:--</span>
+                    <span className="text-sm text-muted-foreground">Duration: --:--</span>
                   </div>
                   <div className="w-48">
                     <AudioPlayer
@@ -495,7 +499,7 @@ const CallHistory = () => {
         onClose={() => setFlagModalOpen(false)}
         onSubmit={handleFlagSubmit}
       />
-    </div>
+    </>
   );
 };
 

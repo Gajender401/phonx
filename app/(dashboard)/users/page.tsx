@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect, useCallback } from 'react';
-import Header from '@/components/layout/Header';
+import { GlobalHeader } from '@/components/layout/GlobalHeader';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -552,7 +552,7 @@ export default function Users() {
           </div>
         </div>
 
-        <Button type="submit" className="w-full bg-[#0B6BAF] hover:bg-[#0B6BAF]/90">
+        <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
           Register
         </Button>
       </form>
@@ -611,7 +611,7 @@ export default function Users() {
           <Button
             type="button"
             onClick={handleConfirm}
-            className="flex-1 bg-[#0B6BAF] hover:bg-[#0B6BAF]/90"
+            className="flex-1 bg-primary hover:bg-primary/90"
             disabled={createUserMutation.isPending}
           >
             {createUserMutation.isPending ? 'Processing...' : 'Confirm & Submit'}
@@ -654,7 +654,7 @@ export default function Users() {
               </Button>
               <Button
                 type="submit"
-                className="flex-1 bg-[#0B6BAF] hover:bg-[#0B6BAF]/90"
+                className="flex-1 bg-primary hover:bg-primary/90"
               >
                 Verify
               </Button>
@@ -701,7 +701,7 @@ export default function Users() {
                   variant={currentPage === pageNum ? "default" : "outline"}
                   size="sm"
                   onClick={() => handlePageChange(pageNum)}
-                  className={currentPage === pageNum ? "bg-[#0B6BAF] hover:bg-[#0B6BAF]/90" : ""}
+                  className={currentPage === pageNum ? "bg-primary hover:bg-primary/90" : ""}
                 >
                   {pageNum}
                 </Button>
@@ -724,103 +724,117 @@ export default function Users() {
   }, [currentPage, pageSize, total, totalPages]);
 
   return (
-    <div className="content-area">
-      <div className="flex flex-col w-full space-y-4">
-        <Header title="Users" />
-        
-        <div className="flex justify-between items-center">
-          <div className="relative w-64">
-            <Input
-              type="text"
-              placeholder="Search users..."
-              value={searchInput}
-              onChange={(e) => {
-                setSearchInput(e.target.value);
-              }}
-              className="pl-10"
-            />
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={16} />
+    <>
+      <GlobalHeader />
+      <div className="content-area px-4 md:px-6 lg:px-8 max-w-full overflow-x-hidden">
+        <div className="flex flex-col gap-4 mb-6">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <div className="flex-1 min-w-0">
+              <div>
+                <h1 className="text-2xl md:text-3xl font-bold text-textColor">
+                  Users
+                </h1>
+                <p className="text-muted-foreground mt-1 text-sm md:text-base">
+                  Manage user accounts and verification
+                </p>
+              </div>
+            </div>
+
+            {/* Search and Add User */}
+            <div className="flex flex-wrap gap-3 items-center">
+              <div className="relative w-64">
+                <Input
+                  type="text"
+                  placeholder="Search users..."
+                  value={searchInput}
+                  onChange={(e) => {
+                    setSearchInput(e.target.value);
+                  }}
+                  className="pl-10"
+                />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={16} />
+              </div>
+
+              <Button
+                onClick={() => setIsModalOpen(true)}
+                className="bg-primary hover:bg-primary/90"
+              >
+                <UserPlus size={16} className="mr-2" />
+                Add User
+              </Button>
+            </div>
           </div>
-          
-          <Button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-[#0B6BAF] hover:bg-[#0B6BAF]/90"
-          >
-            <UserPlus size={16} className="mr-2" />
-            Add User
-          </Button>
         </div>
 
-        <Card className="p-6 w-full">
+        <Card className="p-6">
           {isLoading ? (
-            <div className="text-center py-8">Loading...</div>
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">Loading users...</p>
+            </div>
           ) : error ? (
-            <div className="text-center text-red-500 py-8">{error.message}</div>
+            <div className="text-center text-destructive py-8">{error.message}</div>
           ) : (
             <div className="w-full overflow-x-auto">
-              {/* Horizontal scroll wrapper for mobile/tablet */}
-              <div className="overflow-x-auto">
-                <Table className="w-full">
-                  <TableHeader>
+              <Table className="w-full">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="whitespace-nowrap">Owner Name</TableHead>
+                    <TableHead className="whitespace-nowrap">Company Name</TableHead>
+                    <TableHead className="whitespace-nowrap">Company Size</TableHead>
+                    <TableHead className="whitespace-nowrap">Company Email</TableHead>
+                    <TableHead className="whitespace-nowrap">Company Number</TableHead>
+                    <TableHead className="whitespace-nowrap">Status</TableHead>
+                    <TableHead className="whitespace-nowrap">Action</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {users.length === 0 ? (
                     <TableRow>
-                      <TableHead className="whitespace-nowrap">Owner Name</TableHead>
-                      <TableHead className="whitespace-nowrap">Company Name</TableHead>
-                      <TableHead className="whitespace-nowrap">Company Size</TableHead>
-                      <TableHead className="whitespace-nowrap">Company Email</TableHead>
-                      <TableHead className="whitespace-nowrap">Company Number</TableHead>
-                      <TableHead className="whitespace-nowrap">Status</TableHead>
-                      <TableHead className="whitespace-nowrap">Action</TableHead>
+                      <TableCell colSpan={7} className="text-center py-4 text-muted-foreground">
+                        No users found
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {users.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={7} className="text-center py-4">
-                          No users found
+                  ) : (
+                    users.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell className="whitespace-nowrap">{user.ownerName}</TableCell>
+                        <TableCell className="whitespace-nowrap">{user.companyName}</TableCell>
+                        <TableCell className="whitespace-nowrap">{user.companySize}</TableCell>
+                        <TableCell className="whitespace-nowrap">{user.companyEmail}</TableCell>
+                        <TableCell className="whitespace-nowrap">
+                          {ensureUSPhoneFormat(user.companyNumber)}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">
+                          {user.isVerified ? (
+                            <div className="flex items-center text-green-600">
+                              <CheckCircle size={16} className="mr-1" />
+                              Verified
+                            </div>
+                          ) : (
+                            <div className="flex items-center text-red-600">
+                              <XCircle size={16} className="mr-1" />
+                              Unverified
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell className="whitespace-nowrap">
+                          {!user.isVerified && (
+                            <Button
+                              onClick={() => handleVerifyClick(user)}
+                              variant="outline"
+                              size="sm"
+                              className="text-primary border-primary"
+                            >
+                              Verify Now
+                            </Button>
+                          )}
                         </TableCell>
                       </TableRow>
-                    ) : (
-                      users.map((user) => (
-                        <TableRow key={user.id}>
-                          <TableCell className="whitespace-nowrap">{user.ownerName}</TableCell>
-                          <TableCell className="whitespace-nowrap">{user.companyName}</TableCell>
-                          <TableCell className="whitespace-nowrap">{user.companySize}</TableCell>
-                          <TableCell className="whitespace-nowrap">{user.companyEmail}</TableCell>
-                          <TableCell className="whitespace-nowrap">
-                            {ensureUSPhoneFormat(user.companyNumber)}
-                          </TableCell>
-                          <TableCell className="whitespace-nowrap">
-                            {user.isVerified ? (
-                              <div className="flex items-center text-green-600">
-                                <CheckCircle size={16} className="mr-1" />
-                                Verified
-                              </div>
-                            ) : (
-                              <div className="flex items-center text-red-600">
-                                <XCircle size={16} className="mr-1" />
-                                Unverified
-                              </div>
-                            )}
-                          </TableCell>
-                          <TableCell className="whitespace-nowrap">
-                            {!user.isVerified && (
-                              <Button
-                                onClick={() => handleVerifyClick(user)}
-                                variant="outline"
-                                size="sm"
-                                className="text-[#0B6BAF] border-[#0B6BAF]"
-                              >
-                                Verify Now
-                              </Button>
-                            )}
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-              
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+
               {/* Pagination Controls */}
               {users.length > 0 && PaginationControls}
             </div>
@@ -829,16 +843,16 @@ export default function Users() {
       </div>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-[600px] bg-white">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>{showConfirmation ? "Confirm Information" : "Add New User"}</DialogTitle>
           </DialogHeader>
-          
+
           {showConfirmation ? ConfirmationDialog : RegistrationForm}
         </DialogContent>
       </Dialog>
 
       {OtpVerificationDialog}
-    </div>
+    </>
   );
 }
