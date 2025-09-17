@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { GlobalHeader } from '@/components/layout/GlobalHeader';
 import { Card } from '@/components/ui/card';
-import { Phone, Flag, Clock, ChevronLeft, ChevronRight, Bookmark, X } from 'lucide-react';
+import { Phone, Flag, Clock, ChevronLeft, ChevronRight, Bookmark, X, Calendar } from 'lucide-react';
 import AudioPlayer from '@/components/AudioPlayerSmall';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -307,13 +307,13 @@ const CallHistory = () => {
   return (
     <>
       <GlobalHeader />
-      <div className="content-area px-4 md:px-6 lg:px-8 max-w-full overflow-x-hidden">
+      <div className="content-area bg-background px-4 md:px-6 lg:px-8 max-w-full overflow-x-hidden">
         <div className="flex flex-col gap-4 mb-6">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
             <div className="flex-1 min-w-0">
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-textColor">
-                  Call History
+                All Calls
                 </h1>
                 <p className="text-muted-foreground mt-1 text-sm md:text-base">
                   View all call records and transcripts
@@ -369,35 +369,6 @@ const CallHistory = () => {
                 </SelectContent>
               </Select>
 
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-9 w-9"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  disabled={page <= 1}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                </Button>
-                <span className="text-sm text-muted-foreground min-w-[100px] text-center">
-                  Page {calls?.pagination?.page ?? page} {calls?.pagination?.totalPages ? `of ${calls.pagination.totalPages}` : ''}
-                </span>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="h-9 w-9"
-                  onClick={() => {
-                    const totalPages = calls?.pagination?.totalPages || 1;
-                    setPage((p) => Math.min(totalPages, p + 1));
-                  }}
-                  disabled={(() => {
-                    const totalPages = calls?.pagination?.totalPages;
-                    return totalPages ? page >= totalPages : false;
-                  })()}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
             </div>
           </div>
         </div>
@@ -411,12 +382,12 @@ const CallHistory = () => {
                 key={call.id}
                 ref={scrollElementRef as React.RefObject<HTMLDivElement>}
                 id={cardId}
-                className="p-6 hover:shadow-lg transition-shadow cursor-pointer"
+                className="p-6 hover:shadow-lg transition-shadow border-2 bg-[#141517] border-[#8D8D8D] cursor-pointer"
                 onClick={(e) => handleCardClick(call.id, e)}
               >
                 {/* Header with Customer Number and Flag Button */}
                 <div className="flex justify-between items-start mb-4">
-                  <div>
+                  <div className="flex items-center gap-3">
                     <span className="text-lg font-semibold">
                       Customer Number- {call.phoneNumber}
                     </span>
@@ -454,16 +425,24 @@ const CallHistory = () => {
                       #{call.callNumber.replace('CALL-', '')}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <span className="px-3 py-1 text-sm rounded-full text-black dark:text-white bg-[#9653DB1A] dark:bg-[#9653DB33]">
+                      {call.handledBy}
+                    </span>
+                  <div className="flex items-center bg-[#FFFFFF0D] px-3 py-0.5 rounded-full gap-2">
+                    <Calendar size={14} />
+                    <span className="text-sm text-muted-foreground">
+                      {call.date}
+                    </span>
+                    <span>|</span>
                     <Clock size={14} />
                     <span className="text-sm text-muted-foreground">
-                      {call.time} - {call.date}
+                      {call.time}
                     </span>
                   </div>
                 </div>
 
                 {/* Description/Transcript */}
-                <div className="mb-4">
+                <div className="mb-4 border-l-4 border-[#C5DAFF57] pl-4">
                   <h4 className="text-sm font-semibold mb-2">
                     Call Description
                   </h4>
@@ -490,6 +469,129 @@ const CallHistory = () => {
               </Card>
             );
           })}
+        </div>
+
+        {/* Pagination at the bottom */}
+        <div className="flex items-center justify-center gap-1 mt-6 mb-4">
+          {/* Previous Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9 rounded-full bg-white border border-gray-300 hover:bg-gray-50"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page <= 1}
+          >
+            <ChevronLeft className="h-4 w-4 text-black" />
+          </Button>
+
+          {/* Page Numbers */}
+          {(() => {
+            const totalPages = calls?.pagination?.totalPages || 1;
+            const currentPage = calls?.pagination?.page ?? page;
+            const pages = [];
+            const showPages = 5; // Number of pages to show around current page
+            const halfShow = Math.floor(showPages / 2);
+
+            let startPage = Math.max(1, currentPage - halfShow);
+            let endPage = Math.min(totalPages, currentPage + halfShow);
+
+            // Adjust if we're near the beginning or end
+            if (currentPage <= halfShow) {
+              endPage = Math.min(totalPages, showPages);
+            }
+            if (currentPage + halfShow >= totalPages) {
+              startPage = Math.max(1, totalPages - showPages + 1);
+            }
+
+            // First page + ellipsis
+            if (startPage > 1) {
+              pages.push(
+                <Button
+                  key={1}
+                  variant="ghost"
+                  size="sm"
+                  className={`h-9 w-9 rounded-[10px] text-sm ${currentPage === 1
+                      ? 'bg-[#9653DB4D] text-white hover:bg-[#7236ad4d]'
+                      : 'bg-white border border-gray-300 hover:bg-gray-50 text-black'
+                    }`}
+                  onClick={() => setPage(1)}
+                >
+                  1
+                </Button>
+              );
+
+              if (startPage > 2) {
+                pages.push(
+                  <span key="ellipsis1" className="px-2 text-gray-500">
+                    ...
+                  </span>
+                );
+              }
+            }
+
+            // Main page numbers
+            for (let i = startPage; i <= endPage; i++) {
+              pages.push(
+                <Button
+                  key={i}
+                  variant="ghost"
+                  size="sm"
+                  className={`h-9 w-9 rounded-[10px] text-sm ${currentPage === i
+                      ? 'bg-[#9653DB4D] text-white hover:bg-[#7236ad4d]'
+                      : 'bg-white border border-gray-300 hover:bg-gray-50 text-black'
+                    }`}
+                  onClick={() => setPage(i)}
+                >
+                  {i}
+                </Button>
+              );
+            }
+
+            // Last page + ellipsis
+            if (endPage < totalPages) {
+              if (endPage < totalPages - 1) {
+                pages.push(
+                  <span key="ellipsis2" className="px-2 text-gray-500">
+                    ...
+                  </span>
+                );
+              }
+
+              pages.push(
+                <Button
+                  key={totalPages}
+                  variant="ghost"
+                  size="sm"
+                  className={`h-9 w-9 rounded-[10px] text-sm ${currentPage === totalPages
+                      ? 'bg-[#9653DB4D] text-white hover:bg-[#7236ad4d]'
+                      : 'bg-white border border-gray-300 hover:bg-gray-50 text-black'
+                    }`}
+                  onClick={() => setPage(totalPages)}
+                >
+                  {totalPages}
+                </Button>
+              );
+            }
+
+            return pages;
+          })()}
+
+          {/* Next Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9 rounded-full bg-white border border-gray-300 hover:bg-gray-50"
+            onClick={() => {
+              const totalPages = calls?.pagination?.totalPages || 1;
+              setPage((p) => Math.min(totalPages, p + 1));
+            }}
+            disabled={(() => {
+              const totalPages = calls?.pagination?.totalPages;
+              return totalPages ? page >= totalPages : false;
+            })()}
+          >
+            <ChevronRight className="h-4 w-4 text-black" />
+          </Button>
         </div>
       </div>
 
