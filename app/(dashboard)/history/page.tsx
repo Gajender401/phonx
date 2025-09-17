@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { GlobalHeader } from '@/components/layout/GlobalHeader';
 import { Card } from '@/components/ui/card';
 import { Phone, Flag, Clock, ChevronLeft, ChevronRight, Bookmark, X } from 'lucide-react';
-import AudioPlayer from '@/components/AudioPlayer';
+import AudioPlayer from '@/components/AudioPlayerSmall';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
@@ -475,7 +475,7 @@ const CallHistory = () => {
                 {/* Duration and Audio Player Row */}
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-muted-foreground">Duration: --:--</span>
+                    <span className="text-sm text-muted-foreground">Duration - 2 minutes</span>
                   </div>
                   <div className="w-48">
                     <AudioPlayer
