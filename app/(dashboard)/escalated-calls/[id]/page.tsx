@@ -3,7 +3,7 @@ import React from 'react';
 import { useParams } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import { Card } from '@/components/ui/card';
-import { Phone, Clock, Loader2, Building, User } from 'lucide-react';
+import { Loader2, Building } from 'lucide-react';
 import AudioPlayer from '@/components/AudioPlayer';
 import { apiClient } from '@/lib/api';
 import { useApp } from '@/context/GlobalContext';
@@ -147,7 +147,12 @@ const MissedCallDetail = () => {
   return (
     <>
       <GlobalHeader />
-      <div className="content-area px-4 md:px-6 lg:px-8 max-w-full overflow-x-hidden">
+      <img
+        src="/gradient.svg"
+        alt="Gradient"
+        className="absolute top-0 right-0 w-screen h-screen pointer-events-none z-0"
+      />
+      <div className="content-area px-4 md:px-6 lg:px-8 max-w-full overflow-x-hidden relative z-10">
         <div className="flex flex-col gap-4 mb-6">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
             <div className="flex-1 min-w-0">
@@ -156,53 +161,45 @@ const MissedCallDetail = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-7 gap-4">
           {/* Left Panel - Call Details */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-2">
             <Card className="p-6 h-[550px] flex flex-col bg-[#FFFFFF1A] rounded-[12px]">
-              <div className="space-y-6">
-                <h2 className="text-xl font-semibold mb-6">Call Details</h2>
+                <h2 className="text-2xl font-semibold mb-12">Call Details</h2>
+              <div className="space-y-10">
 
                 {/* Name */}
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
-                    <User size={20} className="text-muted-foreground" />
-                  </div>
+                <div className="flex items-center gap-2">
+                    <img src="/icons/call-name.svg" alt="Name" className="w-16 h-16" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Name</p>
+                    <p className="text-2xl text-[#E1E1E1]">Name</p>
                     <p className="font-medium">{call.voiceInteraction.customerName || 'Unknown'}</p>
                   </div>
                 </div>
 
                 {/* Phone Number */}
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
-                    <Phone size={20} className="text-muted-foreground" />
-                  </div>
+                <div className="flex items-center gap-2">
+                    <img src="/icons/call-phone.svg" alt="Phone" className="w-16 h-16" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Phone No.</p>
+                    <p className="text-2xl text-[#E1E1E1]">Phone No.</p>
                     <p className="font-medium">{call.enduserPhonenumber}</p>
                   </div>
                 </div>
 
                 {/* Time */}
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
-                    <Clock size={20} className="text-muted-foreground" />
-                  </div>
+                <div className="flex items-center gap-2">
+                    <img src="/icons/call-time.svg" alt="Time" className="w-16 h-16" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Time</p>
+                    <p className="text-2xl text-[#E1E1E1]">Time</p>
                     <p className="font-medium">{new Date(call.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
                   </div>
                 </div>
 
                 {/* Duration */}
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
-                    <Clock size={20} className="text-muted-foreground" />
-                  </div>
+                <div className="flex items-center gap-2">
+                    <img src="/icons/call-duration.svg" alt="Duration" className="w-16 h-16" />
                   <div>
-                    <p className="text-sm text-muted-foreground">Duration</p>
+                    <p className="text-2xl text-[#E1E1E1]">Duration</p>
                     <p className="font-medium">02:56</p>
                   </div>
                 </div>
@@ -211,12 +208,11 @@ const MissedCallDetail = () => {
           </div>
 
           {/* Right Panel - Chat Transcript */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-5">
             <Card className="h-[550px] flex flex-col bg-[#FFFFFF1A] rounded-[12px]">
               {/* Chat Header */}
-              <div className="p-6 border-b">
-                <h2 className="text-xl font-semibold">Call Transcript</h2>
-                <p className="text-sm text-muted-foreground mt-1">Date: {new Date(call.createdAt).toLocaleDateString()}</p>
+              <div className="p-6">
+                <h2 className="text-2xl font-semibold">Call Transcript</h2>
               </div>
 
               {/* Chat Messages */}
@@ -225,16 +221,20 @@ const MissedCallDetail = () => {
                   call.voiceInteraction.transcript.messages.map((message, index: number) => (
                     <div
                       key={index}
-                      className={`flex ${message.role === 'User' ? 'justify-end' : 'justify-start'}`}
+                      className={`flex items-center gap-2 ${message.role === 'Human' ? 'justify-end' : 'justify-start'}`}
                     >
+                      {message.role !== 'Human' && (
+                        <img
+                          src="/icons/ai.svg"
+                          alt="AI"
+                          className="w-[35px] h-[35px] flex-shrink-0"
+                        />
+                      )}
                       <div
-                        className={`
-                        max-w-[70%] rounded-2xl px-4 py-2 text-sm
-                        ${message.role === 'User'
-                            ? 'bg-primary text-primary-foreground'
-                            : 'bg-muted text-muted-foreground'
-                          }
-                      `}
+                        className="max-w-[70%] rounded-2xl px-4 py-2 text-sm text-white"
+                        style={{
+                          backgroundColor: message.role === 'Human' ? '#9653DB33' : '#F1F1F11A'
+                        }}
                       >
                         {message.content}
                       </div>
@@ -254,12 +254,8 @@ const MissedCallDetail = () => {
         {/* Audio Player Panel - Full Width at Bottom */}
         <div className="mt-6">
           <Card className="p-6 bg-[#FFFFFF1A] rounded-[12px]">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold">Call Recording</h3>
-              <div className="text-sm text-muted-foreground">
-                Duration: 02:56
-              </div>
-            </div>
+              <h3 className="text-2xl font-semibold mb-4">Call Recording</h3>
+            <div className='bg-[#0000001A] rounded-[42px] px-10 pt-10 pb-5' >
             {call.voiceInteraction.conversationAudioUrl ? (
               <AudioPlayer
                 src={call.voiceInteraction.conversationAudioUrl}
@@ -273,6 +269,7 @@ const MissedCallDetail = () => {
                 <p>No audio recording available for this call.</p>
               </div>
             )}
+            </div>
           </Card>
         </div>
       </div>

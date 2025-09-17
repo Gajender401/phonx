@@ -2,6 +2,7 @@ import React from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useApp } from '@/context/GlobalContext';
 import { useAudio } from '@/context/AudioContext';
+import { useTheme } from '@/context/ThemeContext';
 import AudioPlayer from '@/components/AudioPlayer';
 import { Card } from '@/components/ui/card';
 import { ArrowUp, ArrowLeft } from 'lucide-react';
@@ -22,8 +23,8 @@ export interface HeaderProps {
   onBackClick?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ 
-  title, 
+const Header: React.FC<HeaderProps> = ({
+  title,
   showBackButton = false,
   showMonthFilter = false,
   showDepartmentFilter = false,
@@ -37,6 +38,7 @@ const Header: React.FC<HeaderProps> = ({
 }) => {
   const router = useRouter();
   const pathname = usePathname();
+  const { resolvedTheme } = useTheme();
   const { currentMonth, setCurrentMonth, selectedDepartment, setSelectedDepartment, brands, selectedBrandId, setSelectedBrand, setSelectedBrandId } = useApp();
   const { currentAudio, isPlaying, scrollToCard } = useAudio();
 
@@ -175,9 +177,16 @@ const Header: React.FC<HeaderProps> = ({
               variant="ghost"
               size="icon"
               onClick={onBackClick || (() => router.back())}
-              className="hover:bg-gray-100"
+              className="w-10 h-10 rounded-full hover:opacity-80 transition-opacity"
+              style={{
+                backgroundColor: resolvedTheme === 'light' ? '#FFFFFF' : '#FFFFFF33',
+                border: resolvedTheme === 'light' ? '1px solid #000000' : 'none',
+              }}
             >
-              <ArrowLeft size={20} />
+              <ArrowLeft
+                size={20}
+                color={resolvedTheme === 'light' ? '#000000' : '#FFFFFF'}
+              />
             </Button>
           )}
           <div>

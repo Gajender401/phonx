@@ -3,7 +3,7 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import WaveSurfer from "wavesurfer.js";
 import { Play, Pause } from "lucide-react";
 import { useAudio } from "@/context/AudioContext";
-
+import { FaPlay } from "react-icons/fa";
 interface AudioPlayerProps {
   src: string;
   callId?: number;
@@ -69,13 +69,13 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     });
 
     wavesurferRef.current = wavesurfer;
-    
+
     // Add data attribute for better stopping detection
     if (waveformRef.current) {
       waveformRef.current.setAttribute('data-wavesurfer', 'true');
       (waveformRef.current as any).wavesurfer = wavesurfer;
     }
-    
+
     const proxiedUrl = getProxiedUrl(src);
     wavesurfer.load(proxiedUrl);
 
@@ -135,7 +135,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           waveformRef.current.removeAttribute('data-wavesurfer');
           delete (waveformRef.current as any).wavesurfer;
         }
-        
+
         // Stop and destroy wavesurfer
         if (wavesurfer.isPlaying && wavesurfer.isPlaying()) {
           wavesurfer.pause();
@@ -170,7 +170,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       setError("Audio player not initialized");
       return;
     }
-    
+
     try {
       const actuallyPlaying = wavesurferRef.current.isPlaying();
       if (locallyPlaying || actuallyPlaying) {
@@ -208,8 +208,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       <div className="flex items-center gap-4">
         <span className="text-sm text-gray-400 min-w-[40px]">{formatTime(currentTime)}</span>
         <div className="flex-1 h-1 bg-gray-600 rounded-full relative">
-          <div 
-            className="h-1 bg-white rounded-full" 
+          <div
+            className="h-1 bg-white rounded-full"
             style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
           />
         </div>
@@ -221,44 +221,39 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         {/* Rewind 15s */}
         <button
           onClick={() => seekRelative(-15)}
-          className="w-12 h-12 rounded-full border-2 border-gray-400 hover:border-white flex items-center justify-center text-gray-400 hover:text-white transition-colors disabled:opacity-50"
           disabled={!wavesurferRef.current || isLoading || !!error}
         >
-          <div className="relative flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="rotate-180">
-              <path d="M8 5v14l11-7z" fill="currentColor"/>
-            </svg>
-            <span className="absolute -bottom-2 text-xs font-bold">15</span>
-          </div>
+          <img
+            src="/icons/play-back.svg"
+            alt="Rewind 15s"
+            className="w-6 h-6"
+          />
         </button>
 
         {/* Play/Pause */}
         <button
           onClick={handlePlayPause}
-          className="w-16 h-16 rounded-full bg-white hover:bg-gray-100 flex items-center justify-center text-black transition-colors disabled:opacity-50"
           disabled={!wavesurferRef.current || isLoading || !!error}
         >
           {isLoading ? (
             <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin" />
           ) : locallyPlaying ? (
-            <Pause size={24} />
+            <Pause size={32} />
           ) : (
-            <Play size={24} className="ml-1" />
+            <FaPlay size={32} className="ml-1" />
           )}
         </button>
 
         {/* Forward 15s */}
         <button
           onClick={() => seekRelative(15)}
-          className="w-12 h-12 rounded-full border-2 border-gray-400 hover:border-white flex items-center justify-center text-gray-400 hover:text-white transition-colors disabled:opacity-50"
           disabled={!wavesurferRef.current || isLoading || !!error}
         >
-          <div className="relative flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-              <path d="M8 5v14l11-7z" fill="currentColor"/>
-            </svg>
-            <span className="absolute -bottom-2 text-xs font-bold">15</span>
-          </div>
+          <img
+            src="/icons/play-forwards.svg"
+            alt="Forward 15s"
+            className="w-6 h-6"
+          />
         </button>
       </div>
 
