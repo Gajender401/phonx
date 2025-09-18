@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Lato, Quicksand } from "next/font/google";
 import "./globals.css";
 import { AppProvider } from "@/context/GlobalContext";
 import { AudioProvider } from "@/context/AudioContext";
@@ -9,19 +8,6 @@ import { Toaster } from "@/components/ui/toaster";
 import QueryProvider from "@/providers/QueryProvider";
 import GlobalLoader from "@/components/GlobalLoader";
 
-const lato = Lato({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-lato",
-});
-
-const quicksand = Quicksand({
-  weight: ["400", "500", "600", "700"],
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-quicksand",
-});
 
 export const metadata: Metadata = {
   title: "Phonxai",
@@ -34,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${lato.variable} ${quicksand.variable}`}>
+    <html lang="en">
       <body className="antialiased">
         <ThemeProvider>
           <AppProvider>

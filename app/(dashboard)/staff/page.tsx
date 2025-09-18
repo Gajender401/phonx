@@ -30,7 +30,7 @@ import {
 } from '@/components/ui/select';
 import { toast } from '@/components/ui/use-toast';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { UserPlus, Edit, Filter, Check, X, Calendar, Loader2 } from 'lucide-react';
+import { UserPlus, Edit, Check, X, Calendar, Loader2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { staffApi } from '@/lib/api';
 import type { Staff, Schedule, CreateStaffDto } from '@/lib/api';
@@ -316,45 +316,49 @@ const Staff = () => {
   };
 
   return (
-    <div className="content-area">
+    <div>
       <GlobalHeader title="Staff" />
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-        <div className="flex flex-col gap-4 w-full">
-          <div className="flex items-center justify-between w-full">
-            <div className='flex items-center gap-2'>
-              <Filter size={16} className="text-gray-500" />
-              <span className="text-sm text-gray-500">Filter by:</span>
-              <Select 
-                value={String(departmentFilter)} 
-                onValueChange={(value) => setDepartmentFilter(value === 'all' ? 'all' : Number(value))}
-              >
-                <SelectTrigger className="w-[180px] bg-white">
-                  <SelectValue placeholder="Select department" />
-                </SelectTrigger>
-                <SelectContent className='bg-white' >
-                  <SelectItem value="all">All Departments</SelectItem>
-                  {departments?.map(dept => (
-                    <SelectItem key={dept.id} value={String(dept.id)}>{dept.departmentName}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <Button
-              className="mt-4 md:mt-0 bg-[#0B6BAF] hover:bg-[#0B6BAF]/90"
-              onClick={handleAdd}
-            >
-              <UserPlus size={16} className="mr-2" />
-              Add Member
-            </Button>
-          </div>
-        </div>
-      </div>
+    <div className="content-area">
+          {/* Status Text and Filters in same line */}
+          <div className=" px-4 mb-6">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              {/* Status Text on the left */}
+              <div className="text-2xl font-semibold text-gray-900 dark:text-white">
+                Staff Members - {staffMembers.length}
+              </div>
 
-      <Card className="p-5 shadow-md rounded-lg bg-white overflow-hidden">
+              {/* Select and Button on the right */}
+              <div className="flex flex-wrap gap-3 items-center">
+                <Select
+                  value={String(departmentFilter)}
+                  onValueChange={(value) => setDepartmentFilter(value === 'all' ? 'all' : Number(value))}
+                >
+                  <SelectTrigger className="w-40 bg-white border border-gray-300 dark:bg-[#FFFFFF0D] dark:border-[#FFFFFF1A]">
+                    <SelectValue placeholder="All Departments" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white dark:bg-[#0000004D]">
+                    <SelectItem value="all">All Departments</SelectItem>
+                    {departments?.map(dept => (
+                      <SelectItem key={dept.id} value={String(dept.id)}>{dept.departmentName}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button
+                  className="bg-[#9653DB] hover:bg-[#9653DB]/90"
+                  onClick={handleAdd}
+                >
+                  <UserPlus size={16} className="mr-2" />
+                  Add Member
+                </Button>
+              </div>
+            </div>
+          </div>
+
+      <Card className="p-5 shadow-md rounded-lg bg-white dark:bg-[#0000004D] overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="bg-gray-50">
+              <TableRow className="bg-gray-50 dark:bg-[#0000004D]">
                 <TableHead className="w-[100px]">Actions</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Title</TableHead>
@@ -368,7 +372,7 @@ const Staff = () => {
             </TableHeader>
             <TableBody>
               {staffMembers.map((member) => (
-                <TableRow key={member.id} className="hover:bg-gray-50">
+                <TableRow key={member.id} className="hover:bg-gray-50 dark:hover:bg-[#00000066]">
                   <TableCell className="space-x-1">
                     <Button
                       variant="ghost"
@@ -405,22 +409,16 @@ const Staff = () => {
                     {reverseTimezoneMapping[member.timezone as keyof typeof reverseTimezoneMapping] || member.timezone}
                   </TableCell>
                   <TableCell>
-                    <Badge
-                      variant={member.available ? "default" : "destructive"}
-                      className={`px-2 py-1 rounded-md ${member.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
-                    >
-                      {member.available ? (
-                        <span className="flex items-center">
-                          <Check size={12} className="mr-1" />
-                          Available
-                        </span>
-                      ) : (
-                        <span className="flex items-center">
-                          <X size={12} className="mr-1" />
-                          Unavailable
-                        </span>
-                      )}
-                    </Badge>
+                    <div className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${
+                      member.available 
+                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-400' 
+                        : 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
+                    }`}>
+                      <div className={`w-2 h-2 rounded-full mr-2 ${
+                        member.available ? 'bg-emerald-500' : 'bg-red-500'
+                      }`} />
+                      {member.available ? 'Available' : 'Unavailable'}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -795,7 +793,7 @@ const Staff = () => {
             <div className="space-y-2">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-gray-50">
+                  <TableRow className="bg-gray-50 dark:bg-[#0000004D]">
                     <TableHead>Day</TableHead>
                     <TableHead>Start Time</TableHead>
                     <TableHead>End Time</TableHead>
@@ -805,9 +803,9 @@ const Staff = () => {
                   {weekdays.map((day) => {
                     const daySchedule = currentMember?.schedule?.find(s => s.day === day);
                     if (!daySchedule) return null;
-                    
+
                     return (
-                      <TableRow key={day} className="hover:bg-gray-50">
+                      <TableRow key={day} className="hover:bg-gray-50 dark:hover:bg-[#00000066]">
                         <TableCell className="font-medium">{day}</TableCell>
                         <TableCell>{daySchedule.startTime}</TableCell>
                         <TableCell>{daySchedule.endTime}</TableCell>
@@ -827,6 +825,7 @@ const Staff = () => {
           )}
         </DialogContent>
       </Dialog>
+    </div>
     </div>
   );
 };

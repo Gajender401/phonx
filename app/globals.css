@@ -1,3 +1,4 @@
+@import url('https://fonts.cdnfonts.com/css/sf-pro-display');
 @import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 @import 'react-pdf/dist/esm/Page/TextLayer.css';
 
@@ -119,11 +120,13 @@
   }
 
   body {
-    @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))] font-lato;
+    @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-quicksand font-medium;
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    @apply font-medium;
   }
 
   .component-shadow {
