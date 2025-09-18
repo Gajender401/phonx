@@ -77,70 +77,73 @@ const FlagPopup = ({ isOpen, onClose, onSubmit }: {
     }
   };
 
+  const handleCancel = () => {
+    setMessage('');
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/80" onClick={onClose} />
 
       {/* Modal */}
-      <div
-        className="relative w-full max-w-4xl rounded-lg overflow-hidden"
-        style={{
-          background: 'linear-gradient(180deg, #111111 26%, #DCE1E8 100%)'
-        }}
-      >
+      <div className="relative w-full max-w-2xl bg-white dark:bg-[#1E1F22] rounded-xl overflow-hidden shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <Image
-              src="/logo.svg"
-              alt="PHONXAI"
-              width={120}
-              height={120}
-              className="w-24 h-24"
-            />
-          </div>
+        <div className="flex items-center justify-between p-6 pb-2">
+          <h2 className="text-black dark:text-white text-2xl font-semibold">Add Description</h2>
           <button
             onClick={onClose}
-            className="text-white hover:text-gray-300 transition-colors"
+            className="text-red-500 hover:text-red-400 transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6" />
           </button>
         </div>
 
+        {/* Description */}
+        <div className="px-6 pb-4">
+          <p className="dark:text-muted-foreground text-xs">
+            Adding description will help us understand your problem
+          </p>
+        </div>
+
+        {/* Divider */}
+        <div className="h-px bg-gray-600 mx-6" />
+
         {/* Content */}
-        <div className="px-16 pb-20 space-y-5">
-          <div className="text-center">
-            <h3 className="text-white text-3xl font-semibold mb-2">
-              Please describe what made you flag this <br /> call transcript
-            </h3>
-            <p className="text-white/80 mt-5 text-xl">
-              It also help us make your system better
-            </p>
-          </div>
+        <div className="p-6 space-y-6">
 
           <div className="relative">
             <Textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Message......."
-              className="w-full h-40 bg-white/10 border-white/30 text-white placeholder:text-white/60 resize-none"
+              placeholder="Write here..."
+              className="w-full h-40 bg-transparent border-none text-black dark:text-white placeholder:text-gray-500 dark:placeholder:text-[#4A4A68] resize-none text-lg leading-relaxed focus:outline-none focus:ring-0"
               maxLength={maxLength}
             />
-            <div className="absolute bottom-2 right-2 text-xs text-gray-400">
-              {message.length} / {maxLength}
+            <div className="absolute bottom-3 right-3 text-sm">
+              <span className="text-[#C4C4C4]">{message.length}</span>
+              <span className="text-[#C4C4C4]">/</span>
+              <span className="text-[#D0AEF5]">{maxLength}</span>
             </div>
           </div>
 
-          <div className="flex justify-center">
+          {/* Buttons */}
+          <div className="flex justify-end gap-4 pt-4">
+            <Button
+              onClick={handleCancel}
+              className="bg-[#F5F5F5] dark:bg-[#F5F5F524] border-gray-600 text-[#4B5563] dark:text-gray-300 font-semibold hover:bg-gray-700 hover:text-white px-8 py-2 rounded-lg"
+            >
+              Cancel
+            </Button>
             <Button
               onClick={handleSubmit}
-              className="bg-[#0B6BAF] hover:bg-[#0B6BAF]/90 text-white px-8 py-2 rounded-md font-medium"
+              className="bg-[#9653DB] hover:bg-purple-700 text-white px-8 font-semibold py-2 rounded-lg"
               disabled={!message.trim()}
             >
-              Flag
+              Done
             </Button>
           </div>
         </div>
@@ -307,7 +310,7 @@ const CallHistory = () => {
 
   return (
     <>
-      <GlobalHeader />
+      <GlobalHeader title='Call History' />
       <div className="content-area bg-background px-4 md:px-6 lg:px-8 max-w-full overflow-x-hidden">
         <div className="flex flex-col gap-4 mb-6">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
@@ -317,7 +320,7 @@ const CallHistory = () => {
                   All Calls
                 </h1>
                 <p className="text-muted-foreground mt-1 text-sm md:text-base">
-                  View all call records and transcripts
+                  Showing all calls, 29 Aug 2025
                 </p>
               </div>
             </div>
@@ -383,7 +386,7 @@ const CallHistory = () => {
                 key={call.id}
                 ref={scrollElementRef as React.RefObject<HTMLDivElement>}
                 id={cardId}
-                className="p-6 hover:shadow-lg transition-shadow border-2 bg-card text-card-foreground border-[#8D8D8D] cursor-pointer"
+                className="p-6 rounded-xl bg-card border-[4px] text-card-foreground border-[#9653DB1A] dark:border-[#2D2D2D85] cursor-pointer"
                 onClick={(e) => handleCardClick(call.id, e)}
               >
                 {/* Header with Customer Number and Flag Button */}
@@ -436,12 +439,12 @@ const CallHistory = () => {
                   </span>
                   <div className="flex items-center bg-[#FFFFFF0D] px-3 py-0.5 rounded-full gap-2">
                     <Calendar size={14} />
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-sm text-muted-foreground dark:text-white">
                       {call.date}
                     </span>
-                    <span>|</span>
+                    <span className="dark:text-white">|</span>
                     <Clock size={14} />
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-sm text-muted-foreground dark:text-white">
                       {call.time}
                     </span>
                   </div>
