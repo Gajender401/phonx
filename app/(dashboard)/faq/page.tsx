@@ -340,56 +340,60 @@ export default function FAQPage() {
   }
 
   return (
+    <div>
+      <GlobalHeader title="AI knowledge base" />
     <div className="content-area">
-      <GlobalHeader title="Claire Knowledge Base" />
 
-      <Card>
+      <Card className='border-none bg-transparent' >
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            {/* Title on the left */}
             <CardTitle className="text-xl">All Questions</CardTitle>
-            <Button onClick={handleNewQuestion} className="bg-blue-600 hover:bg-blue-700">
-              <Plus className="h-4 w-4 mr-2" />
-              New Question
-            </Button>
+
+            {/* Search, Department filter and New Question button on the right */}
+            <div className="flex flex-wrap gap-3 items-center">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                {isSearching && (
+                  <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 animate-spin" />
+                )}
+                <Input
+                  placeholder="Search questions..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className={`pl-10 ${isSearching ? 'pr-10' : ''} w-48`}
+                />
+              </div>
+              <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
+                <SelectTrigger className="w-48">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {departments.map((dept) => (
+                    <SelectItem key={dept} value={dept}>
+                      {dept}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button onClick={handleNewQuestion} className="bg-[#9653DB] text-white hover:bg-[#9653DB]/90">
+                <Plus className="h-4 w-4 mr-2" />
+                New Question
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-4 mb-6">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              {isSearching && (
-                <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 animate-spin" />
-              )}
-              <Input
-                placeholder="Search questions..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className={`pl-10 ${isSearching ? 'pr-10' : ''}`}
-              />
-            </div>
-            <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
-              <SelectTrigger className="w-48">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {departments.map((dept) => (
-                  <SelectItem key={dept} value={dept}>
-                    {dept}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
 
-          <div className="border rounded-lg">
+          <div className="">
             <Table>
               <TableHeader>
-                <TableRow className="bg-gray-50">
-                  <TableHead className="font-semibold">Question</TableHead>
-                  <TableHead className="font-semibold">Answer</TableHead>
-                  <TableHead className="font-semibold">Department</TableHead>
-                  <TableHead className="font-semibold">Routing</TableHead>
-                  <TableHead className="font-semibold text-center">Actions</TableHead>
+                <TableRow className="bg-[#FFFFFF05] ">
+                  <TableHead className="font-semibold text-white">Question</TableHead>
+                  <TableHead className="font-semibold text-white">Answer</TableHead>
+                  <TableHead className="font-semibold text-white">Department</TableHead>
+                  <TableHead className="font-semibold text-white">Routing</TableHead>
+                  <TableHead className="font-semibold text-white text-center">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -576,5 +580,7 @@ export default function FAQPage() {
         </AlertDialogContent>
       </AlertDialog>
     </div>
+    </div>
+
   );
 }
