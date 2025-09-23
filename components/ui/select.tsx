@@ -13,8 +13,10 @@ const SelectValue = SelectPrimitive.Value
 
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> & {
+    isShowIconBlack?: boolean
+  }
+>(({ className, children, isShowIconBlack = false, ...props }, ref) => (
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
@@ -25,7 +27,10 @@ const SelectTrigger = React.forwardRef<
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <MdArrowDropDown className="h-4 w-4 text-[hsl(var(--select-foreground))]" />
+      <MdArrowDropDown className={cn(
+        "h-4 w-4",
+        isShowIconBlack ? "text-black" : "text-[hsl(var(--select-foreground))]"
+      )} />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
 ))

@@ -87,7 +87,7 @@ const WeekFilter: React.FC<WeekFilterProps> = ({ value, onChange }) => {
 
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="w-full sm:w-44 bg-white text-black">
+      <SelectTrigger isShowIconBlack className="w-full sm:w-44 bg-white text-black">
         <SelectValue placeholder="Select week" />
       </SelectTrigger>
       <SelectContent className="bg-white">

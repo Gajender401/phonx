@@ -14,6 +14,7 @@ const BrandFilter = () => {
   return (
     <div className="flex items-center gap-2">
       <Select
+      
         value={selectedBrandId || 'all'}
         onValueChange={(value) => {
           if (value === 'all') {
@@ -26,7 +27,7 @@ const BrandFilter = () => {
           setSelectedBrand(brand);
         }}
       >
-        <SelectTrigger className="w-full sm:w-40 bg-background">
+        <SelectTrigger isShowIconBlack={true} className="w-full sm:w-40 bg-background">
           <SelectValue placeholder="All Brands" />
         </SelectTrigger>
         <SelectContent className="bg-background">

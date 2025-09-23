@@ -38,7 +38,7 @@ const MonthFilter = () => {
       value={currentMonth} 
       onValueChange={(value) => setCurrentMonth(value)}
     >
-      <SelectTrigger className="w-full sm:w-40 bg-white text-black">
+      <SelectTrigger isShowIconBlack className="w-full sm:w-40 bg-white text-black">
         <SelectValue placeholder="Month" />
       </SelectTrigger>
       <SelectContent className='bg-white text-black'>
