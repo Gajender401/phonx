@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import PageHeader from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +15,7 @@ import { vkgApiService } from '@/lib/vkg-api';
 import { InfoIcon, Sparkles, Save, Wand2, X, ArrowLeft, Loader2 } from 'lucide-react';
 import { useApp } from '@/context/GlobalContext';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { GlobalHeader } from '@/components/layout/GlobalHeader';
 
 const departments = ['Claims', 'Policy', 'General'];
 
@@ -220,45 +221,18 @@ export default function NewQuestionPage() {
   };
 
   return (
-    <div className="relative">
+    <div>
+      <GlobalHeader title="AI knowledge base" />
+      <div className="relative">
       <div className="content-area">
         <PageHeader
           title="Add New Question"
-          subtitle="Create a new FAQ for the knowledge base"
+          subtitle="Add question and answer to set up for knowledge base"
           showBackButton={true}
           onBackClick={handleBack}
         />
 
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-xl">Add New Question</CardTitle>
-              <div className="flex gap-3">
-                <Button variant="outline" onClick={handleCancel}>
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleSave}
-                  disabled={createFaqMutation.isPending || isVerifying}
-                  className="bg-blue-600 hover:bg-blue-700"
-                >
-                  {isVerifying ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Verifying...
-                    </>
-                  ) : createFaqMutation.isPending ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Creating...
-                    </>
-                  ) : (
-                    'Save Question'
-                  )}
-                </Button>
-              </div>
-            </div>
-          </CardHeader>
+        <Card className='bg-transparent border-none' >
           <CardContent className="space-y-6 w-1/2">
             <div className="space-y-2">
               <Label htmlFor="question" className="text-sm font-medium">
@@ -270,6 +244,7 @@ export default function NewQuestionPage() {
                 onChange={(e) => handleQuestionChange(e.target.value)}
                 placeholder="Type the FAQ question here..."
                 disabled={showAISuggestions && !isManualEditing}
+                className='bg-[#FFFFFF1F]'
               />
             </div>
 
@@ -282,12 +257,12 @@ export default function NewQuestionPage() {
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
                 placeholder="Provide a detailed answer..."
-                className="min-h-[120px] resize-none"
+                className="min-h-[120px] resize-none bg-[#FFFFFF1F]"
                 disabled={showAISuggestions && !isManualEditing}
               />
             </div>
 
-            <Card className="bg-[#F2FAFF] border-[#96B1CE66]">
+            <Card className="bg-[#FFFFFF1F] border-none">
               <CardContent className="pt-6 space-y-6">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="enable-routing" className="text-sm font-medium">
@@ -308,7 +283,7 @@ export default function NewQuestionPage() {
                         Department
                       </Label>
                       <Select value={selectedDepartment} onValueChange={handleDepartmentChange} disabled={showAISuggestions && !isManualEditing}>
-                        <SelectTrigger>
+                        <SelectTrigger className='bg-[#434446] border-[#41424599]' >
                           <SelectValue placeholder="Select a department" />
                         </SelectTrigger>
                         <SelectContent>
@@ -331,7 +306,7 @@ export default function NewQuestionPage() {
                           value={requirement}
                           onChange={(e) => handleRequirementChange(e.target.value)}
                           placeholder="Write here"
-                          className="min-h-[100px] resize-none"
+                          className="min-h-[100px] bg-[#434446] border-[#41424599] resize-none"
                           disabled={showAISuggestions && !isManualEditing}
                         />
                       </div>
@@ -346,7 +321,7 @@ export default function NewQuestionPage() {
                           id="gather-requirements"
                           value={gatherRequirements}
                           onChange={(e) => setGatherRequirements(e.target.value)}
-                          className="min-h-[100px] resize-none"
+                          className="min-h-[100px] bg-[#434446] border-[#41424599] resize-none"
                           disabled={showAISuggestions && !isManualEditing}
                         />
                       </div>
@@ -354,9 +329,9 @@ export default function NewQuestionPage() {
                   </>
                 )}
 
-                <div className="flex items-start gap-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                  <InfoIcon className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <p className="text-sm text-blue-800">
+                <div className="flex items-start gap-2 p-3 bg-[#434446] rounded-lg border-none">
+                  <InfoIcon className="h-4 w-4 text-[#9653DB] mt-0.5 flex-shrink-0" />
+                  <p className="text-sm text-[#9653DB]">
                     You can also create question without routing
                   </p>
                 </div>
@@ -374,6 +349,34 @@ export default function NewQuestionPage() {
               </div>
             )}
           </CardContent>
+          <CardFooter className='w-1/2 px-6 flex items-center justify-end ' >
+            <div className="flex items-center justify-between">
+              <div className="flex gap-3">
+                <Button className='bg-[#F5F5F524] text-white' onClick={handleCancel}>
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleSave}
+                  disabled={createFaqMutation.isPending || isVerifying}
+                  className="bg-[#9653DB] hover:bg-[#9653DB]/90 text-white"
+                >
+                  {isVerifying ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Verifying...
+                    </>
+                  ) : createFaqMutation.isPending ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    'Save'
+                  )}
+                </Button>
+              </div>
+            </div>
+          </CardFooter>
         </Card>
       </div>
 
@@ -397,19 +400,19 @@ export default function NewQuestionPage() {
                 <span className="text-white text-2xl font-bold">!</span>
               </div>
             </div>
-            
+
             {/* Title */}
             <h2 className="text-3xl font-bold text-gray-800 mb-4">Oops!!</h2>
-            
+
             {/* Message */}
             <p className="text-gray-600 mb-8 leading-relaxed">
               It looks like there's a problem with your Answer.<br />
               Please try rephrasing your question and we'll get you the<br />
               right answer in no time.
             </p>
-            
+
             {/* View AI Suggestions Button */}
-            <Button 
+            <Button
               onClick={handleViewAISuggestions}
               className="w-full bg-orange-400 hover:bg-orange-500 text-white py-3 rounded-lg font-medium"
             >
@@ -422,9 +425,8 @@ export default function NewQuestionPage() {
       {/* AI Suggestions Drawer Overlay */}
       {showAISuggestions && (
         <div
-          className={`fixed top-0 right-0 rounded-l-lg h-screen bg-white shadow-xl z-30 transform transition-transform duration-300 ease-in-out ${
-            showAISuggestions ? 'translate-x-0' : 'translate-x-full'
-          }`}
+          className={`fixed top-0 right-0 h-screen bg-[#121212] shadow-xl z-30 transform transition-transform duration-300 ease-in-out ${showAISuggestions ? 'translate-x-0' : 'translate-x-full'
+            }`}
           style={{
             width: `calc((100vw - ${isSidebarCollapsed ? '80px' : '356px'}) / 2)`
           }}
@@ -434,7 +436,7 @@ export default function NewQuestionPage() {
             <div className="p-6 border-b border-gray-200 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-blue-600" />
-                <h2 className="text-2xl font-bold text-[#111827]">AI Suggestions</h2>
+                <h2 className="text-2xl font-bold text-[#9653DB]">AI Suggestions</h2>
               </div>
               <Button
                 variant="ghost"
@@ -512,5 +514,7 @@ export default function NewQuestionPage() {
         </div>
       )}
     </div>
+    </div>
+
   );
 }

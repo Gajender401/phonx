@@ -47,7 +47,8 @@ const config: Config = {
 					subtle: '#C7B6DD14',
 					soft: '#731AD21A',
 					border: '#9653DB',
-					activeBg: '#9653DB3B'
+					activeBg: '#9653DB3B',
+					hover: '#9653DB24'
 				},
 				dark: '#121212',
 				white: '#FFFFFF',

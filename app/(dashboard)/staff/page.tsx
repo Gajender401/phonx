@@ -449,16 +449,7 @@ const Staff = () => {
 
         <Dialog open={addModalOpen} onOpenChange={setAddModalOpen}>
           <DialogContent className="sm:max-w-md bg-[#2a2a2a] border-gray-700">
-            <DialogHeader className="relative">
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() => setAddModalOpen(false)}
-                className="absolute right-0 top-0 text-gray-400 hover:text-white hover:bg-[#404040] h-6 w-6"
-              >
-                <X size={16} />
-              </Button>
+            <DialogHeader>
               <DialogTitle className="text-white text-xl font-semibold">Add Staff Member</DialogTitle>
               <p className="text-gray-400 text-sm mt-2">Please Enter the details to add new member.</p>
             </DialogHeader>
@@ -642,9 +633,9 @@ const Staff = () => {
         </Dialog>
 
         <Dialog open={editModalOpen} onOpenChange={setEditModalOpen}>
-          <DialogContent className="sm:max-w-md bg-white">
+          <DialogContent className="sm:max-w-md bg-[#2a2a2a] border-gray-700">
             <DialogHeader>
-              <DialogTitle>Edit Staff Member</DialogTitle>
+              <DialogTitle className="text-white text-xl font-semibold">Edit Staff Member</DialogTitle>
             </DialogHeader>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -652,9 +643,15 @@ const Staff = () => {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Full Name</FormLabel>
+                      <FormLabel className="text-white text-sm">
+                        Full Name <span className="text-red-500">*</span>
+                      </FormLabel>
                       <FormControl>
-                        <Input {...field} disabled={isSubmitting} />
+                        <Input
+                          {...field}
+                          disabled={isSubmitting}
+                          className="bg-[#404040] border-gray-600 text-white placeholder:text-gray-400 focus:border-gray-500"
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -663,9 +660,15 @@ const Staff = () => {
                   name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Title</FormLabel>
+                      <FormLabel className="text-white text-sm">
+                        Title <span className="text-red-500">*</span>
+                      </FormLabel>
                       <FormControl>
-                        <Input {...field} disabled={isSubmitting} />
+                        <Input
+                          {...field}
+                          disabled={isSubmitting}
+                          className="bg-[#404040] border-gray-600 text-white placeholder:text-gray-400 focus:border-gray-500"
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -674,20 +677,22 @@ const Staff = () => {
                   name="departmentId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Department</FormLabel>
+                      <FormLabel className="text-white text-sm">
+                        Department <span className="text-red-500">*</span>
+                      </FormLabel>
                       <Select
                         onValueChange={(value) => field.onChange(Number(value))}
                         value={String(field.value)}
                         disabled={isSubmitting}
                       >
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="bg-[#404040] border-gray-600 text-white focus:border-gray-500">
                             <SelectValue placeholder="Select department" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
+                        <SelectContent className="bg-[#404040] border-gray-600">
                           {departments?.map(dept => (
-                            <SelectItem key={dept.id} value={String(dept.id)}>
+                            <SelectItem key={dept.id} value={String(dept.id)} className="text-white hover:bg-[#505050]">
                               {dept.departmentName}
                             </SelectItem>
                           ))}
@@ -701,11 +706,14 @@ const Staff = () => {
                     name="number"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Phone Number (US)</FormLabel>
+                        <FormLabel className="text-white text-sm">
+                          Phone Number (US) <span className="text-red-500">*</span>
+                        </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             disabled={isSubmitting}
+                            className="bg-[#404040] border-gray-600 text-white placeholder:text-gray-400 focus:border-gray-500"
                             onChange={(e) => {
                               // Format the input as user types
                               const formatted = formatUSPhoneNumber(e.target.value);
@@ -721,9 +729,15 @@ const Staff = () => {
                     name="ext"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Extension</FormLabel>
+                        <FormLabel className="text-white text-sm">
+                          Extension <span className="text-red-500">*</span>
+                        </FormLabel>
                         <FormControl>
-                          <Input {...field} disabled={isSubmitting} />
+                          <Input
+                            {...field}
+                            disabled={isSubmitting}
+                            className="bg-[#404040] border-gray-600 text-white placeholder:text-gray-400 focus:border-gray-500"
+                          />
                         </FormControl>
                       </FormItem>
                     )}
@@ -795,18 +809,9 @@ const Staff = () => {
         </Dialog>
 
         <Dialog open={scheduleModalOpen} onOpenChange={setScheduleModalOpen}>
-          <DialogContent className="sm:max-w-lg bg-[#2a2a2a] border-gray-700">
-            <DialogHeader className="relative">
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={() => setScheduleModalOpen(false)}
-                className="absolute right-0 top-0 text-gray-400 hover:text-white hover:bg-[#404040] h-6 w-6"
-              >
-                <X size={16} />
-              </Button>
-              <DialogTitle className="text-white text-xl font-semibold pr-8">
+          <DialogContent className="sm:max-w-md bg-[#2a2a2a] border-gray-700">
+            <DialogHeader>
+              <DialogTitle className="text-white text-xl font-semibold">
                 {currentMember?.name}'s Schedule
               </DialogTitle>
               {!editingSchedule && (
@@ -823,47 +828,47 @@ const Staff = () => {
             </DialogHeader>
             {editingSchedule ? (
               <Form {...scheduleForm}>
-                <form onSubmit={scheduleForm.handleSubmit(handleScheduleSubmit)} className="space-y-6 mt-6">
+                <form onSubmit={scheduleForm.handleSubmit(handleScheduleSubmit)} className="space-y-4 mt-4">
                   {weekdays.map((day, index) => (
-                    <div key={day} className="space-y-4">
-                      <h3 className="text-white text-lg font-medium">{day}</h3>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-gray-300 text-sm mb-2 block">Start</label>
-                          <FormField
-                            name={`schedule.${index}.startTime`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <Input
-                                    type="time"
-                                    {...field}
-                                    disabled={isSavingSchedule}
-                                    className="bg-[#404040] border-gray-600 text-white focus:border-gray-500"
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        <div>
-                          <label className="text-gray-300 text-sm mb-2 block">End</label>
-                          <FormField
-                            name={`schedule.${index}.endTime`}
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormControl>
-                                  <Input
-                                    type="time"
-                                    {...field}
-                                    disabled={isSavingSchedule}
-                                    className="bg-[#404040] border-gray-600 text-white focus:border-gray-500"
-                                  />
-                                </FormControl>
-                              </FormItem>
-                            )}
-                          />
-                        </div>
+                    <div key={day} className="grid grid-cols-3 gap-4 items-end">
+                      <div>
+                        <h3 className="text-white text-lg font-medium">{day}</h3>
+                      </div>
+                      <div>
+                        <label className="text-gray-300 text-[11px] mb-2 block">Start</label>
+                        <FormField
+                          name={`schedule.${index}.startTime`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input
+                                  type="time"
+                                  {...field}
+                                  disabled={isSavingSchedule}
+                                  className="bg-[#404040] h-8 py-1 border-gray-600 text-white focus:border-gray-500"
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-gray-300 text-[11px] mb-2 block">End</label>
+                        <FormField
+                          name={`schedule.${index}.endTime`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Input
+                                  type="time"
+                                  {...field}
+                                  disabled={isSavingSchedule}
+                                  className="bg-[#404040] h-8 py-1 border-gray-600 text-white focus:border-gray-500"
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
                       </div>
                     </div>
                   ))}
@@ -892,26 +897,26 @@ const Staff = () => {
                 </form>
               </Form>
             ) : (
-              <div className="space-y-6 mt-6">
+              <div className="space-y-4 mt-4">
                 {weekdays.map((day) => {
                   const daySchedule = currentMember?.schedule?.find(s => s.day === day);
                   if (!daySchedule) return null;
 
                   return (
-                    <div key={day} className="space-y-4">
-                      <h3 className="text-white text-lg font-medium">{day}</h3>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-gray-300 text-sm mb-2 block">Start</label>
-                          <div className="bg-[#404040] border border-gray-600 text-white px-3 py-2 rounded-md">
-                            {daySchedule.startTime}
-                          </div>
+                    <div key={day} className="grid grid-cols-3 gap-4">
+                      <div>
+                        <h3 className="text-white text-lg font-medium">{day}</h3>
+                      </div>
+                      <div>
+                        <label className="text-gray-300 text-[11px] mb-2 block">Start</label>
+                        <div className="bg-[#404040] h-8 border border-gray-600 text-white px-3 py-1 rounded-md">
+                          {daySchedule.startTime}
                         </div>
-                        <div>
-                          <label className="text-gray-300 text-sm mb-2 block">End</label>
-                          <div className="bg-[#404040] border border-gray-600 text-white px-3 py-2 rounded-md">
-                            {daySchedule.endTime}
-                          </div>
+                      </div>
+                      <div>
+                        <label className="text-gray-300 text-[11px] mb-2 block">End</label>
+                        <div className="bg-[#404040] h-8 border border-gray-600 text-white px-3 py-1 rounded-md">
+                          {daySchedule.endTime}
                         </div>
                       </div>
                     </div>
@@ -920,7 +925,7 @@ const Staff = () => {
               </div>
             )}
             {!editingSchedule && (
-              <DialogFooter className="mt-8 pt-4">
+              <DialogFooter className="">
                 <Button 
                   onClick={() => setScheduleModalOpen(false)}
                   className="bg-[#9653DB] hover:bg-[#8344c4] text-white"

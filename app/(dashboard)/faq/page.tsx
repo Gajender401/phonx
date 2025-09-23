@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { Edit, Trash2, Plus, Search, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { Trash2, Plus, Search, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { vkgApiService, transformVKGToFAQ } from '@/lib/vkg-api';
@@ -23,6 +24,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useApp } from '@/context/GlobalContext';
+import ExpandableText from '@/components/ExpandableText';
 
 interface FAQItem {
   id: string;
@@ -392,14 +394,13 @@ export default function FAQPage() {
                   <TableHead className="font-semibold text-white">Question</TableHead>
                   <TableHead className="font-semibold text-white">Answer</TableHead>
                   <TableHead className="font-semibold text-white">Department</TableHead>
-                  <TableHead className="font-semibold text-white">Routing</TableHead>
                   <TableHead className="font-semibold text-white text-center">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {error ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8">
+                    <TableCell colSpan={4} className="text-center py-8">
                       <div className="text-red-600">
                         <p className="font-medium">Error loading FAQs</p>
                         <p className="text-sm text-gray-600 mt-1">
@@ -418,7 +419,7 @@ export default function FAQPage() {
                   </TableRow>
                 ) : isLoading || (isFetching && allFaqs.length === 0) || needsDataRefresh ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-12">
+                    <TableCell colSpan={4} className="text-center py-12">
                       <div className="flex items-center justify-center gap-2">
                         <Loader2 className="h-5 w-5 animate-spin text-primary" />
                         <span className="text-gray-600">
@@ -429,7 +430,7 @@ export default function FAQPage() {
                   </TableRow>
                 ) : currentFAQs.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 text-gray-500">
+                    <TableCell colSpan={4} className="text-center py-8 text-gray-500">
                       {debouncedSearchTerm 
                         ? `No FAQs found matching "${debouncedSearchTerm}".` 
                         : allFaqs.length === 0 
@@ -439,24 +440,20 @@ export default function FAQPage() {
                   </TableRow>
                 ) : (
                   currentFAQs.map((faq) => (
-                    <TableRow key={faq.id} className="hover:bg-gray-50">
+                    <TableRow key={faq.id} className="hover:bg-brand-purple-hover">
                       <TableCell className="font-medium max-w-xs">
                         {faq.question}
                       </TableCell>
                       <TableCell className="max-w-md">
-                        <div className="text-gray-600 truncate">
-                          {faq.answer}
-                        </div>
+                        <ExpandableText
+                          text={faq.answer}
+                          maxLength={150}
+                        />
                       </TableCell>
                       <TableCell>
-                        <Badge variant="secondary" className="bg-gray-100 text-gray-700">
+                        <span className="text-white">
                           {faq.department}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={faq.routing_status ? "default" : "secondary"}>
-                          {faq.routing_status ? "Enabled" : "Disabled"}
-                        </Badge>
+                        </span>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center justify-center gap-2">
@@ -466,7 +463,13 @@ export default function FAQPage() {
                             onClick={() => handleEdit(faq.id)}
                             className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
                           >
-                            <Edit className="h-4 w-4" />
+                            <Image
+                              src="/icons/pencile.svg"
+                              alt="Edit"
+                              width={16}
+                              height={16}
+                              className="h-4 w-4"
+                            />
                           </Button>
                           <Button
                             variant="ghost"
