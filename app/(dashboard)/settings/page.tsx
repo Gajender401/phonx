@@ -432,7 +432,7 @@ const Settings = () => {
             </div>
 
             {/* About Section */}
-            <div className="mb-6">
+            <div className="mb-6 bg-[#D0AEF512] rounded-lg p-4">
               <h3 className="text-lg font-semibold mb-4 text-white">About</h3>
               <p className="text-sm text-gray-300 leading-relaxed">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -463,7 +463,7 @@ const Settings = () => {
                   loadAccountDetails(); // Reset to original data
                 }}
                 disabled={isSaving}
-                className="bg-gray-600 border-gray-500 text-white hover:bg-[#FFFFFF0F] w-[550px]"
+                className="bg-[#F5F5F524] border-[#0E0E2C66] text-white hover:bg-[#FFFFFF0F]"
               >
                 Cancel
               </Button>

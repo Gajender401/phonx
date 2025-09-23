@@ -402,7 +402,7 @@ export default function NewQuestionPage() {
             </div>
 
             {/* Title */}
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">Oops!!</h2>
+            <h2 className="text-3xl font-bold text-white mb-4">Oops!!</h2>
 
             {/* Message */}
             <p className="text-gray-600 mb-8 leading-relaxed">
@@ -433,7 +433,7 @@ export default function NewQuestionPage() {
         >
           <div className="flex flex-col h-full">
             {/* Header */}
-            <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+            <div className="p-6 shadow-sm  flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-blue-600" />
                 <h2 className="text-2xl font-bold text-[#9653DB]">AI Suggestions</h2>
@@ -452,18 +452,18 @@ export default function NewQuestionPage() {
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
               {/* AI Suggestions Section */}
               <div className="space-y-4">
-                <h3 className="text-lg font-medium text-gray-800">AI Suggestions</h3>
+                <h3 className="text-lg font-medium text-white">Tips for you</h3>
 
                 {aiVerificationResult?.suggestions && (
                   <div className="space-y-3">
                     {Object.entries(aiVerificationResult.suggestions).map(([key, suggestion], index) => (
-                      <div key={key} className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                      <div key={key} className="p-4 bg-[#D0AEF50F] rounded-lg">
                         <div className="flex items-center gap-2 mb-2">
-                          <Badge variant="secondary" className="bg-blue-100 text-blue-800 text-xs">
-                            Suggestion {index + 1}
+                          <Badge variant="secondary" className="bg-transparent border-[#D0AEF54A] text-white text-xs">
+                            Tip {index + 1}
                           </Badge>
                         </div>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-white">
                           {String(suggestion)}
                         </p>
                       </div>
@@ -474,7 +474,7 @@ export default function NewQuestionPage() {
                 {/* Suggested Question */}
                 {aiVerificationResult?.Question && (
                   <div className="space-y-4">
-                    <h4 className="text-md font-medium text-gray-800">Suggested Question</h4>
+                    <h4 className="text-md font-medium text-white">Suggested Question</h4>
                     <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                       <p className="text-sm text-gray-600 leading-relaxed">
                         {aiVerificationResult.Question}
@@ -486,7 +486,7 @@ export default function NewQuestionPage() {
                 {/* Suggested Answer */}
                 {aiVerificationResult?.best_answer && (
                   <div className="space-y-4">
-                    <h4 className="text-md font-medium text-gray-800">Suggested Answer</h4>
+                    <h4 className="text-md font-medium text-white">Suggested Answer</h4>
                     <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
                       <p className="text-sm text-gray-600 leading-relaxed">
                         {aiVerificationResult.best_answer}
