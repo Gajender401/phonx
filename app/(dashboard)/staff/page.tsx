@@ -30,7 +30,7 @@ import {
 } from '@/components/ui/select';
 import { toast } from '@/components/ui/use-toast';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { UserPlus, Edit, Check, X, Calendar, Loader2, Search } from 'lucide-react';
+import { UserPlus, Check, X, Calendar, Loader2, Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { staffApi } from '@/lib/api';
 import type { Staff, Schedule, CreateStaffDto } from '@/lib/api';
@@ -408,7 +408,7 @@ const Staff = () => {
                         size="sm"
                         onClick={() => handleViewSchedule(member)}
                         disabled={isLoadingSchedule && loadingScheduleId === member.id}
-                        className="h-8"
+                        className="h-8 bg-transparent border-0 text-[#3B82F6]"
                       >
                         {isLoadingSchedule && loadingScheduleId === member.id ? (
                           <Loader2 size={12} className="animate-spin" />
@@ -437,7 +437,7 @@ const Staff = () => {
                         onClick={() => handleEdit(member)}
                         className="h-8 w-8"
                       >
-                        <Edit size={16} />
+                        <img src="/icons/edit-pencile.svg" alt="Edit" className="w-4 h-4" />
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -795,51 +795,93 @@ const Staff = () => {
         </Dialog>
 
         <Dialog open={scheduleModalOpen} onOpenChange={setScheduleModalOpen}>
-          <DialogContent className="sm:max-w-md bg-white">
-            <DialogHeader>
-              <DialogTitle className="flex items-center justify-between">
+          <DialogContent className="sm:max-w-lg bg-[#2a2a2a] border-gray-700">
+            <DialogHeader className="relative">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => setScheduleModalOpen(false)}
+                className="absolute right-0 top-0 text-gray-400 hover:text-white hover:bg-[#404040] h-6 w-6"
+              >
+                <X size={16} />
+              </Button>
+              <DialogTitle className="text-white text-xl font-semibold pr-8">
                 {currentMember?.name}'s Schedule
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setEditingSchedule(!editingSchedule)}
-                  disabled={isSavingSchedule}
-                >
-                  <Edit size={16} className="mr-2" />
-                  {editingSchedule ? "Cancel Edit" : "Edit Schedule"}
-                </Button>
               </DialogTitle>
+              {!editingSchedule && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setEditingSchedule(true)}
+                  disabled={isSavingSchedule}
+                  className="absolute right-8 top-0 bg-[#9653DB] hover:bg-[#8344c4] text-white px-4 py-2 rounded-md text-sm"
+                >
+                  Edit
+                </Button>
+              )}
             </DialogHeader>
             {editingSchedule ? (
               <Form {...scheduleForm}>
-                <form onSubmit={scheduleForm.handleSubmit(handleScheduleSubmit)} className="space-y-4">
+                <form onSubmit={scheduleForm.handleSubmit(handleScheduleSubmit)} className="space-y-6 mt-6">
                   {weekdays.map((day, index) => (
-                    <div key={day} className="grid grid-cols-3 gap-4 items-center">
-                      <div className="font-medium">{day}</div>
-                      <FormField
-                        name={`schedule.${index}.startTime`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <TimePicker {...field} disabled={isSavingSchedule} />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        name={`schedule.${index}.endTime`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <TimePicker {...field} disabled={isSavingSchedule} />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
+                    <div key={day} className="space-y-4">
+                      <h3 className="text-white text-lg font-medium">{day}</h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-gray-300 text-sm mb-2 block">Start</label>
+                          <FormField
+                            name={`schedule.${index}.startTime`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <Input
+                                    type="time"
+                                    {...field}
+                                    disabled={isSavingSchedule}
+                                    className="bg-[#404040] border-gray-600 text-white focus:border-gray-500"
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                        <div>
+                          <label className="text-gray-300 text-sm mb-2 block">End</label>
+                          <FormField
+                            name={`schedule.${index}.endTime`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormControl>
+                                  <Input
+                                    type="time"
+                                    {...field}
+                                    disabled={isSavingSchedule}
+                                    className="bg-[#404040] border-gray-600 text-white focus:border-gray-500"
+                                  />
+                                </FormControl>
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
                     </div>
                   ))}
-                  <DialogFooter>
-                    <Button type="submit" disabled={isSavingSchedule}>
+                  <DialogFooter className="mt-8 pt-4 flex gap-3">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setEditingSchedule(false)}
+                      disabled={isSavingSchedule}
+                      className="bg-transparent border-gray-600 text-white hover:bg-[#404040] hover:border-gray-500"
+                    >
+                      Cancel
+                    </Button>
+                    <Button 
+                      type="submit" 
+                      disabled={isSavingSchedule}
+                      className="bg-[#9653DB] hover:bg-[#8344c4] text-white"
+                    >
                       {isSavingSchedule ? (
                         <Loader2 size={16} className="animate-spin" />
                       ) : (
@@ -850,35 +892,39 @@ const Staff = () => {
                 </form>
               </Form>
             ) : (
-              <div className="space-y-2">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-gray-50 dark:bg-[#0000004D]">
-                      <TableHead>Day</TableHead>
-                      <TableHead>Start Time</TableHead>
-                      <TableHead>End Time</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {weekdays.map((day) => {
-                      const daySchedule = currentMember?.schedule?.find(s => s.day === day);
-                      if (!daySchedule) return null;
+              <div className="space-y-6 mt-6">
+                {weekdays.map((day) => {
+                  const daySchedule = currentMember?.schedule?.find(s => s.day === day);
+                  if (!daySchedule) return null;
 
-                      return (
-                        <TableRow key={day} className="hover:bg-gray-50 dark:hover:bg-[#00000066]">
-                          <TableCell className="font-medium">{day}</TableCell>
-                          <TableCell>{daySchedule.startTime}</TableCell>
-                          <TableCell>{daySchedule.endTime}</TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
+                  return (
+                    <div key={day} className="space-y-4">
+                      <h3 className="text-white text-lg font-medium">{day}</h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-gray-300 text-sm mb-2 block">Start</label>
+                          <div className="bg-[#404040] border border-gray-600 text-white px-3 py-2 rounded-md">
+                            {daySchedule.startTime}
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-gray-300 text-sm mb-2 block">End</label>
+                          <div className="bg-[#404040] border border-gray-600 text-white px-3 py-2 rounded-md">
+                            {daySchedule.endTime}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
             {!editingSchedule && (
-              <DialogFooter>
-                <Button onClick={() => setScheduleModalOpen(false)}>
+              <DialogFooter className="mt-8 pt-4">
+                <Button 
+                  onClick={() => setScheduleModalOpen(false)}
+                  className="bg-[#9653DB] hover:bg-[#8344c4] text-white"
+                >
                   Close
                 </Button>
               </DialogFooter>
