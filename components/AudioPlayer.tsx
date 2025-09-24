@@ -1,9 +1,8 @@
 "use client";
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import WaveSurfer from "wavesurfer.js";
-import { Play, Pause } from "lucide-react";
 import { useAudio } from "@/context/AudioContext";
-import { FaPlay } from "react-icons/fa";
+import { useTheme } from "@/context/ThemeContext";
 interface AudioPlayerProps {
   src: string;
   callId?: number;
@@ -31,6 +30,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
   const waveformRef = useRef<HTMLDivElement>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
   const { currentAudio, setCurrentAudio, isPlaying, setIsPlaying } = useAudio();
+  const { resolvedTheme } = useTheme();
 
   // Check if this audio player is currently the active one
   const isCurrentlyPlaying = currentAudio?.src === src && isPlaying;
@@ -238,9 +238,17 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
           {isLoading ? (
             <div className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin" />
           ) : locallyPlaying ? (
-            <Pause size={32} />
+            <img
+              src={resolvedTheme === 'dark' ? "/icons/pause-dark.svg" : "/icons/pause-light.svg"}
+              alt="Pause"
+              className="w-8 h-8"
+            />
           ) : (
-            <FaPlay size={32} className="ml-1" />
+            <img
+              src={resolvedTheme === 'dark' ? "/icons/play-dark.svg" : "/icons/play-light.svg"}
+              alt="Play"
+              className="w-8 h-8"
+            />
           )}
         </button>
 

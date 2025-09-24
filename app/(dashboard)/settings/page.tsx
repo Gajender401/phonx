@@ -9,9 +9,11 @@ import { getAccountDetails, updateAccountDetails, AccountDetails } from '@/lib/s
 import { toast } from '@/components/ui/use-toast';
 import { useApp } from '@/context/GlobalContext';
 import { ResetPasswordModal } from '@/components/ResetPasswordModal';
+import { useTheme } from '@/context/ThemeContext';
 
 const Settings = () => {
   const { isAuthenticated, authLoading } = useApp();
+  const { resolvedTheme } = useTheme();
   const [accountData, setAccountData] = useState<AccountDetails>({
     companyName: '',
     adminName: '',
@@ -96,21 +98,21 @@ const Settings = () => {
         <div className="">
             {/* Header with Edit Details title and buttons */}
             <div className="flex justify-between items-center mb-6">
-              <h1 className="text-2xl font-semibold text-white">Edit Details</h1>
+              <h1 className={`text-2xl font-semibold ${resolvedTheme === 'light' ? 'text-black' : 'text-white'}`}>Edit Details</h1>
               <div className="flex gap-2">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setIsEditing(!isEditing)}
-                  className="flex items-center gap-2 bg-transparent border-[#9653DB5E] text-white hover:bg-gray-600"
+                  className={`flex items-center gap-2 bg-transparent border-[#9653DB5E] ${resolvedTheme === 'light' ? 'text-[#A15CEB] hover:bg-gray-100' : 'text-white hover:bg-gray-600'}`}
                 >
                   <img src="/icons/pencile-active.svg" alt="Edit" className="w-4 h-4" />
                 </Button>
                 <Button
                   onClick={() => setIsResetPasswordModalOpen(true)}
-                  className="border-[#9653DB54] border bg-transparent h-9 hover:bg-[#7C3AED]/90 text-white"
+                  className={`border-[#9653DB54] border bg-transparent h-9 hover:bg-[#7C3AED]/90 ${resolvedTheme === 'light' ? 'text-[#A15CEB]' : 'text-white'}`}
                 >
-                  Reset Password
+                  Reset Password 
                 </Button>
               </div>
             </div>
@@ -119,61 +121,61 @@ const Settings = () => {
             {/* Form Fields */}
             <div className="space-y-4 mb-6">
               <div>
-                <label className="text-sm font-medium mb-2 block text-white">Admin Name</label>
+                <label className={`text-sm font-medium mb-2 block ${resolvedTheme === 'light' ? 'text-black' : 'text-white'}`}>Admin Name</label>
                 <Input
                   type="text"
                   value={accountData.adminName}
                   onChange={(e) => handleInputChange('adminName', e.target.value)}
                   readOnly={!isEditing}
-                  className={`bg-[#FFFFFF0F] w-[550px] border-gray-600 text-white placeholder-gray-400 ${!isEditing ? "cursor-not-allowed" : ""}`}
+                  className={`bg-[#FFFFFF0F] w-[550px] border-gray-600 ${resolvedTheme === 'light' ? 'text-black placeholder-gray-600' : 'text-white placeholder-gray-400'} ${!isEditing ? "cursor-not-allowed" : ""}`}
                   placeholder="Diego Matos"
                 />
               </div>
 
               <div>
-                <label className="text-sm font-medium mb-2 block text-white">Company Name</label>
+                <label className={`text-sm font-medium mb-2 block ${resolvedTheme === 'light' ? 'text-black' : 'text-white'}`}>Company Name</label>
                 <Input
                   type="text"
                   value={accountData.companyName}
                   onChange={(e) => handleInputChange('companyName', e.target.value)}
                   readOnly={!isEditing}
-                  className={`bg-[#FFFFFF0F] w-[550px] border-gray-600 text-white placeholder-gray-400 ${!isEditing ? "cursor-not-allowed" : ""}`}
+                  className={`bg-[#FFFFFF0F] w-[550px] border-gray-600 ${resolvedTheme === 'light' ? 'text-black placeholder-gray-600' : 'text-white placeholder-gray-400'} ${!isEditing ? "cursor-not-allowed" : ""}`}
                   placeholder="XYZ"
                 />
               </div>
 
               <div>
-                <label className="text-sm font-medium mb-2 block text-white">Company Size</label>
+                <label className={`text-sm font-medium mb-2 block ${resolvedTheme === 'light' ? 'text-black' : 'text-white'}`}>Company Size</label>
                 <Input
                   type="text"
                   value={accountData.companySize}
                   onChange={(e) => handleInputChange('companySize', e.target.value)}
                   readOnly={!isEditing}
-                  className={`bg-[#FFFFFF0F] w-[550px] border-gray-600 text-white placeholder-gray-400 ${!isEditing ? "cursor-not-allowed" : ""}`}
+                  className={`bg-[#FFFFFF0F] w-[550px] border-gray-600 ${resolvedTheme === 'light' ? 'text-black placeholder-gray-600' : 'text-white placeholder-gray-400'} ${!isEditing ? "cursor-not-allowed" : ""}`}
                   placeholder="234"
                 />
               </div>
 
               <div>
-                <label className="text-sm font-medium mb-2 block text-white">Phone number</label>
+                <label className={`text-sm font-medium mb-2 block ${resolvedTheme === 'light' ? 'text-black' : 'text-white'}`}>Phone number</label>
                 <Input
                   type="tel"
                   value={accountData.phoneNumber}
                   readOnly
                   disabled
-                  className="bg-[#FFFFFF0F] w-[550px] border-gray-600 text-white placeholder-gray-400 cursor-not-allowed"
+                  className={`bg-[#FFFFFF0F] w-[550px] border-gray-600 ${resolvedTheme === 'light' ? 'text-black placeholder-gray-600' : 'text-white placeholder-gray-400'} cursor-not-allowed`}
                   placeholder="49883988585"
                 />
               </div>
 
               <div>
-                <label className="text-sm font-medium mb-2 block text-white">Email</label>
+                <label className={`text-sm font-medium mb-2 block ${resolvedTheme === 'light' ? 'text-black' : 'text-white'}`}>Email</label>
                 <Input
                   type="email"
                   value={accountData.email}
                   readOnly
                   disabled
-                  className="bg-[#FFFFFF0F] w-[550px] border-gray-600 text-white placeholder-gray-400 cursor-not-allowed"
+                  className={`bg-[#FFFFFF0F] w-[550px] border-gray-600 ${resolvedTheme === 'light' ? 'text-black placeholder-gray-600' : 'text-white placeholder-gray-400'} cursor-not-allowed`}
                   placeholder="diegopereira.workflow@gmail.com"
                 />
               </div>
@@ -181,23 +183,23 @@ const Settings = () => {
 
             {/* About Section */}
             <div className="mb-6 bg-[#D0AEF512] rounded-lg p-4">
-              <h3 className="text-lg font-semibold mb-4 text-white">About</h3>
-              <p className="text-sm text-gray-300 leading-relaxed">
+              <h3 className={`text-lg font-semibold mb-4 ${resolvedTheme === 'light' ? 'text-black' : 'text-white'}`}>About</h3>
+              <p className={`text-sm leading-relaxed ${resolvedTheme === 'light' ? 'text-gray-700' : 'text-gray-300'}`}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
               </p>
             </div>
 
             {/* Contact Us Section */}
             <div className="mb-8">
-              <h3 className="text-lg font-semibold mb-4 text-white">Contact Us</h3>
+              <h3 className={`text-lg font-semibold mb-4 ${resolvedTheme === 'light' ? 'text-black' : 'text-white'}`}>Contact Us</h3>
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
-                  <Phone size={16} className="text-gray-400" />
-                  <span className="text-gray-300">Phone number</span>
+                  <Phone size={16} className={`${resolvedTheme === 'light' ? 'text-gray-600' : 'text-gray-400'}`} />
+                  <span className={`${resolvedTheme === 'light' ? 'text-gray-700' : 'text-gray-300'}`}>Phone number</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Mail size={16} className="text-gray-400" />
-                  <span className="text-gray-300">Email- xyz@gmail.com</span>
+                  <Mail size={16} className={`${resolvedTheme === 'light' ? 'text-gray-600' : 'text-gray-400'}`} />
+                  <span className={`${resolvedTheme === 'light' ? 'text-gray-700' : 'text-gray-300'}`}>Email- xyz@gmail.com</span>
                 </div>
               </div>
             </div>
@@ -211,14 +213,14 @@ const Settings = () => {
                   loadAccountDetails(); // Reset to original data
                 }}
                 disabled={isSaving}
-                className="bg-[#F5F5F524] border-[#0E0E2C66] text-white hover:bg-[#FFFFFF0F]"
+                className={`bg-[#F5F5F524] border-[#0E0E2C66] ${resolvedTheme === 'light' ? 'text-[#A15CEB] hover:bg-gray-100' : 'text-white hover:bg-[#FFFFFF0F]'}`}
               >
                 Cancel
               </Button>
               <Button
                 onClick={handleSave}
                 disabled={isSaving}
-                className="bg-[#7C3AED] hover:bg-[#7C3AED]/90 text-white"
+                className={`bg-[#7C3AED] hover:bg-[#7C3AED]/90 ${resolvedTheme === 'light' ? 'text-[#A15CEB]' : 'text-white'}`}
               >
                 {isSaving ? (
                   <>

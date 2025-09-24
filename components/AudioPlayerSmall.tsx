@@ -14,19 +14,7 @@ interface AudioPlayerProps {
   isComplaint?: boolean;
 }
 
-// SVG Icon Components
-const PlayIcon = ({ className }: { className?: string }) => (
-  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-    <path d="M13.659 8.79911C13.8905 8.61991 14.0779 8.39011 14.2068 8.12741C14.3357 7.86461 14.4027 7.57581 14.4027 7.28311C14.4027 6.99041 14.3357 6.70151 14.2068 6.43881C14.0779 6.17601 13.8905 5.94621 13.659 5.76711C10.6612 3.44824 7.31417 1.62015 3.743 0.351067L3.09 0.119066C1.842 -0.323934 0.523 0.520066 0.354 1.80907C-0.118 5.44311 -0.118 9.12301 0.354 12.7571C0.524 14.0461 1.842 14.8901 3.09 14.4471L3.743 14.2151C7.31417 12.946 10.6612 11.1179 13.659 8.79911Z" fill="currentColor"/>
-  </svg>
-);
-
-const PauseIcon = ({ className }: { className?: string }) => (
-  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
-    <rect x="4" y="3" width="2" height="9" fill="currentColor"/>
-    <rect x="9" y="3" width="2" height="9" fill="currentColor"/>
-  </svg>
-);
+// Note: Custom SVG icons are now loaded from public/icons folder
 
 const AudioPlayer: React.FC<AudioPlayerProps> = ({
   src,
@@ -72,8 +60,8 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     const wavesurfer = WaveSurfer.create({
       container: waveformRef.current,
       waveColor: resolvedTheme === 'dark' ? '#E4E4E496' : '#D0AEF5A3',
-      progressColor: '#0B6BAF',
-      cursorColor: '#0B6BAF',
+      progressColor: '#9653DB',
+      cursorColor: '#9653DB',
       cursorWidth: 2,
       barWidth: 2,
       barGap: 1,
@@ -209,15 +197,23 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
       <div className="flex items-center gap-1 bg-transparent rounded-2xl px-2 py-1.5">
         <button
           onClick={handlePlayPause}
-          className="text-blue-600 hover:text-blue-700 transition-colors disabled:opacity-50 p-1"
+          className=" transition-colors disabled:opacity-50 p-1"
           disabled={!wavesurferRef.current || isLoading || !!error}
         >
           {isLoading ? (
             <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
           ) : locallyPlaying ? (
-            <PauseIcon className="w-4 h-4" />
+            <img
+              src={resolvedTheme === 'dark' ? "/icons/pause-dark.svg" : "/icons/pause-light.svg"}
+              alt="Pause"
+              className="w-4 h-4"
+            />
           ) : (
-            <PlayIcon className="w-4 h-4" />
+            <img
+              src={resolvedTheme === 'dark' ? "/icons/play-dark.svg" : "/icons/play-light.svg"}
+              alt="Play"
+              className="w-4 h-4"
+            />
           )}
         </button>
         <div ref={waveformRef} className="flex-1" />

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { GlobalHeader } from '@/components/layout/GlobalHeader';
 import { Card } from '@/components/ui/card';
-import { Phone, Flag, Clock, ChevronLeft, ChevronRight, Bookmark, X, Calendar } from 'lucide-react';
+import { Phone, Clock, ChevronLeft, ChevronRight, X, Calendar } from 'lucide-react';
 import AudioPlayer from '@/components/AudioPlayerSmall';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -400,9 +400,9 @@ const CallHistory = () => {
                     <div className="flex border border-[#FFFFFF29] px-2 py-1 rounded-md justify-end">
                       {call.isFlagged ? (
                         <div className="flex rounded-md items-center gap-2">
-                          <Flag size={16} className="fill-current" />
+                          <Image src="/icons/flaged.svg" alt="Flagged" width={16} height={16} />
                           <span className="text-sm">
-                            Flagged 
+                            Flagged
                           </span>
                         </div>
                       ) : (
@@ -417,7 +417,7 @@ const CallHistory = () => {
                           disabled={flagCallMutation.isPending}
                         >
                           <span className="text-sm">Flag for Review</span>
-                          <Bookmark size={20} strokeWidth={3} className="text-red-600" />
+                          <Image src="/icons/flag.svg" alt="Flag" width={20} height={20} />
                         </button>
                       )}
                     </div>

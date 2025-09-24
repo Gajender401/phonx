@@ -4,7 +4,8 @@ import { useParams, useRouter } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import { GlobalHeader } from '@/components/layout/GlobalHeader';
 import { Card } from '@/components/ui/card';
-import { Phone, Clock, Flag, Loader2 } from 'lucide-react';
+import { Phone, Clock, Loader2 } from 'lucide-react';
+import Image from 'next/image';
 import AudioPlayer from '@/components/AudioPlayer';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
@@ -276,7 +277,7 @@ const CallDetail = () => {
 
                 {call.isFlagged ? (
                   <div className="flex items-center gap-2 text-orange-600">
-                    <Flag size={16} className="fill-current" />
+                    <Image src="/icons/flaged.svg" alt="Flagged" width={16} height={16} />
                     <div className="flex flex-col">
                       <span className="text-sm font-medium">Already Flagged</span>
                       <span className="text-xs">Status: {call.complaintInfo?.complaintStatus}</span>
@@ -291,7 +292,7 @@ const CallDetail = () => {
                     className="flex items-center gap-2 text-red-600 hover:text-red-700 rounded-md"
                     disabled={flagCallMutation.isPending}
                   >
-                    <Flag size={16} />
+                    <Image src="/icons/flag.svg" alt="Flag" width={16} height={16} />
                     <span>Flag for Review</span>
                   </button>
                 )}
