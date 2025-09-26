@@ -19,7 +19,7 @@ export const GlobalHeader: React.FC<GlobalHeaderProps> = ({ title = "Dashboard" 
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="flex items-center justify-between w-full px-4 md:px-6 lg:px-8 py-4 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div className="flex items-center justify-between w-full px-4 md:px-6 lg:px-8 py-4 border-b border-border bg-white dark:bg-background/95 dark:backdrop-blur dark:supports-[backdrop-filter]:bg-background/60">
       {/* Left side - Title */}
       <div className="flex items-center">
         <h1 className="text-xl md:text-2xl font-bold text-foreground">

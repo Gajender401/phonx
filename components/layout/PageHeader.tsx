@@ -37,7 +37,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({
               variant="ghost"
               size="icon"
               onClick={handleBackClick}
-              className="hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="rounded-full bg-transparent border border-[#00000033] hover:bg-[#0000000A] dark:bg-[#FFFFFF33] dark:border-none dark:hover:bg-[#FFFFFF4D]"
             >
               <ArrowLeft size={20} />
             </Button>

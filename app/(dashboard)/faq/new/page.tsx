@@ -244,7 +244,7 @@ export default function NewQuestionPage() {
                 onChange={(e) => handleQuestionChange(e.target.value)}
                 placeholder="Type the FAQ question here..."
                 disabled={showAISuggestions && !isManualEditing}
-                className='bg-[#FFFFFF1F]'
+                className='bg-[#FFFFFF1F] border-[#9653DB00] focus:ring-0'
               />
             </div>
 
@@ -257,12 +257,12 @@ export default function NewQuestionPage() {
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
                 placeholder="Provide a detailed answer..."
-                className="min-h-[120px] resize-none bg-[#FFFFFF1F]"
+                className="min-h-[120px] resize-none bg-[#FFFFFF1F] border-[#9653DB00] focus:ring-0"
                 disabled={showAISuggestions && !isManualEditing}
               />
             </div>
 
-            <Card className="bg-[#FFFFFF1F] border-none">
+            <Card className="dark:bg-[#FFFFFF1F] bg-[#D0AEF512] border-none">
               <CardContent className="pt-6 space-y-6">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="enable-routing" className="text-sm font-medium">
@@ -283,7 +283,7 @@ export default function NewQuestionPage() {
                         Department
                       </Label>
                       <Select value={selectedDepartment} onValueChange={handleDepartmentChange} disabled={showAISuggestions && !isManualEditing}>
-                        <SelectTrigger className='bg-[#434446] border-[#41424599]' >
+                        <SelectTrigger className='bg-white border-[#9653DB00] dark:bg-[#434446] dark:border-[#41424599] focus:ring-0' >
                           <SelectValue placeholder="Select a department" />
                         </SelectTrigger>
                         <SelectContent>
@@ -306,7 +306,7 @@ export default function NewQuestionPage() {
                           value={requirement}
                           onChange={(e) => handleRequirementChange(e.target.value)}
                           placeholder="Write here"
-                          className="min-h-[100px] bg-[#434446] border-[#41424599] resize-none"
+                          className="min-h-[100px] bg-white border-[#9653DB00] dark:bg-[#434446] dark:border-[#41424599] resize-none focus:ring-0"
                           disabled={showAISuggestions && !isManualEditing}
                         />
                       </div>
@@ -321,20 +321,13 @@ export default function NewQuestionPage() {
                           id="gather-requirements"
                           value={gatherRequirements}
                           onChange={(e) => setGatherRequirements(e.target.value)}
-                          className="min-h-[100px] bg-[#434446] border-[#41424599] resize-none"
+                          className="min-h-[100px] bg-white border-[#9653DB00] dark:bg-[#434446] dark:border-[#41424599] resize-none focus:ring-0"
                           disabled={showAISuggestions && !isManualEditing}
                         />
                       </div>
                     )}
                   </>
                 )}
-
-                <div className="flex items-start gap-2 p-3 bg-[#434446] rounded-lg border-none">
-                  <InfoIcon className="h-4 w-4 text-[#9653DB] mt-0.5 flex-shrink-0" />
-                  <p className="text-sm text-[#9653DB]">
-                    You can also create question without routing
-                  </p>
-                </div>
               </CardContent>
             </Card>
 

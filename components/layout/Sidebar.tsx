@@ -1,6 +1,7 @@
 'use client'
 import { cn } from '@/lib/utils';
 import { useApp } from '@/context/GlobalContext';
+import { useTheme } from '@/context/ThemeContext';
 import { Home, ClipboardList, Phone, Users, Bot, Settings, LogOut, ChevronLeft, ChevronRight, HelpCircle, Crown, History, PhoneCall } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -28,6 +29,7 @@ export const Sidebar = () => {
     getMenuItems,
     logout
   } = useApp();
+  const { resolvedTheme } = useTheme();
   const pathname = usePathname();
   const router = useRouter();
   
@@ -64,20 +66,20 @@ export const Sidebar = () => {
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className={cn("flex items-center justify-center py-6", isSidebarCollapsed ? "px-2" : "px-6")}>        
+          <div className={cn("flex items-center justify-center py-6", isSidebarCollapsed ? "px-2" : "px-6")}>
             {!isSidebarCollapsed ? (
-              <Image 
-                src="/logo-big.svg" 
-                alt="Phonx Logo" 
-                width={120} 
+              <Image
+                src={resolvedTheme === 'dark' ? "/logo-dark.svg" : "/logo-light.svg"}
+                alt="Phonx Logo"
+                width={120}
                 height={40}
                 className="h-10 w-auto"
               />
             ) : (
-              <Image 
-                src="/logo-small.svg" 
-                alt="Phonx Logo" 
-                width={32} 
+              <Image
+                src={resolvedTheme === 'dark' ? "/logo-dark.svg" : "/logo-light.svg"}
+                alt="Phonx Logo"
+                width={32}
                 height={32}
                 className="h-8 w-8"
               />
